@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FavoritePlace</string>
+    <string name="title_home">FavoritePlace</string>
+    <string name="title_add_location">Add Location</string>
+    <string name="title_login">Login</string>
+    <string name="set_location">Set Location</string>
+    <string name="location_info_title">Location Info</string>
+</resources>

@@ -1,14 +1,14 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
-    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-    id 'androidx.navigation.safeargs.kotlin'
-    id 'com.google.firebase.crashlytics'
-    id 'kotlin-parcelize'
-    id 'kotlinx-serialization'
+    alias libs.plugins.android.plugin
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.kapt
+    alias libs.plugins.kotlin.parcelize
+    alias libs.plugins.kotlin.serialization
+    alias libs.plugins.hilt.plugin
+    alias libs.plugins.safe.args
+    alias libs.plugins.firebase.crashlitycs
+    alias libs.plugins.maps.platform.secrets
+    alias libs.plugins.gms.google.services
 }
 
 android {
@@ -43,38 +43,32 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.constraint.layout)
+    implementation(libs.material)
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
+    implementation(libs.bundles.navigation)
+    implementation(libs.bundles.androidx.lifecycle)
 
-    implementation platform('com.google.firebase:firebase-bom:30.1.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines.playservices)
+    implementation(libs.play.services.maps)
 
-    implementation 'com.google.firebase:firebase-database-ktx'
-    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.2"
+    implementation(libs.glide.android)
+    kapt(libs.glide.compiler)
 
-    implementation "com.google.dagger:hilt-android:2.38.1"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.1'
-    implementation 'com.google.firebase:firebase-storage:20.0.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
-    implementation 'com.google.firebase:firebase-analytics:21.0.0'
-    kapt "com.google.dagger:hilt-compiler:2.38.1"
+    implementation platform(libs.firebase.bom)
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.storage)
 
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation(libs.testing.junit)
+    androidTestImplementation(libs.testing.androidx.junit)
+    androidTestImplementation(libs.testing.espresso.core)
 }

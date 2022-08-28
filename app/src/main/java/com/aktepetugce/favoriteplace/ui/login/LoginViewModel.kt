@@ -1,11 +1,10 @@
 package com.aktepetugce.favoriteplace.ui.login
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aktepetugce.favoriteplace.base.BaseViewModel
 import com.aktepetugce.favoriteplace.domain.usecase.authentication.AuthUseCases
 import com.aktepetugce.favoriteplace.util.Response
+import com.aktepetugce.favoriteplace.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,44 +12,43 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
-) : BaseViewModel() {
+) : ViewModel() {
+
+    val error = SingleLiveEvent<String>()
+    val isLoading = SingleLiveEvent<Boolean>()
+    val isSignInSuccess = SingleLiveEvent<Boolean>()
+    val isSignUpSuccess = SingleLiveEvent<Boolean>()
 
     val isUserAuthenticated get() = authUseCases.isUserAuthenticated()
-
-    private val _isSignInSuccess = MutableLiveData<Boolean>()
-    val isSignInSuccess: LiveData<Boolean> = _isSignInSuccess
-
+    
     fun signIn(userEmail: String, password: String) = viewModelScope.launch {
-        authUseCases.signIn.invoke(userEmail, password).collect { response ->
+        authUseCases.signIn(userEmail, password).collect { response ->
             when (response) {
                 is Response.Success<*> -> {
-                    _isLoading.value= false
-                    _isSignInSuccess.value = true
+                    isLoading.value= false
+                    isSignInSuccess.value = true
                 }
                 is Response.Error -> {
-                    _isLoading.value= false
-                    _error.value = response.message
+                    isLoading.value= false
+                    error.value = response.message
                 }
-                else -> _isLoading.value = true
+                else -> isLoading.value = true
             }
         }
     }
 
-    private val _isSignUpSuccess = MutableLiveData<Boolean>()
-    val isSignUpSuccess: LiveData<Boolean> = _isSignUpSuccess
-
     fun signUp(userEmail: String, password: String) = viewModelScope.launch {
-        authUseCases.signUp.invoke(userEmail, password).collect { response ->
+        authUseCases.signUp(userEmail, password).collect { response ->
             when (response) {
                 is Response.Success<*> -> {
-                    _isLoading.value= false
-                    _isSignUpSuccess.value = true
+                    isLoading.value= false
+                    isSignUpSuccess.value = true
                 }
                 is Response.Error -> {
-                    _isLoading.value= false
-                    _error.value = response.message
+                    isLoading.value= false
+                    error.value = response.message
                 }
-                else -> _isLoading.value = true
+                else -> isLoading.value = true
             }
         }
     }

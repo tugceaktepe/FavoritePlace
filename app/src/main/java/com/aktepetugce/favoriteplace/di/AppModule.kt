@@ -9,6 +9,7 @@ import com.aktepetugce.favoriteplace.data.repo.PlaceRepositoryImpl
 import com.aktepetugce.favoriteplace.domain.mapper.PlaceMapper
 import com.aktepetugce.favoriteplace.domain.usecase.authentication.*
 import com.aktepetugce.favoriteplace.domain.usecase.place.*
+import com.aktepetugce.favoriteplace.util.annotation.IoDispatcher
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +22,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -30,8 +33,9 @@ class AppModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        auth: FirebaseAuth
-    ): AuthRepository = AuthRepositoryImpl(auth)
+        auth: FirebaseAuth,
+       @IoDispatcher dispatcher: CoroutineDispatcher
+    ): AuthRepository = AuthRepositoryImpl(auth, dispatcher)
 
     @Provides
     @Singleton
@@ -39,8 +43,9 @@ class AppModule {
         database: FirebaseDatabase,
         databaseReference: DatabaseReference,
         storage: FirebaseStorage,
-        storageReference : StorageReference
-    ): PlaceRepository = PlaceRepositoryImpl(database, databaseReference,storage, storageReference)
+        storageReference : StorageReference,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): PlaceRepository = PlaceRepositoryImpl(database, databaseReference,storage, storageReference, dispatcher)
 
 
     @Provides
@@ -78,4 +83,8 @@ class AppModule {
             RequestOptions().placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_foreground)
         )
+
+    @IoDispatcher
+    @Provides
+    fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

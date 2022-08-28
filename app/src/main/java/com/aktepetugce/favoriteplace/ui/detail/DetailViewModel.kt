@@ -1,7 +1,7 @@
 package com.aktepetugce.favoriteplace.ui.detail
 
-import com.aktepetugce.favoriteplace.base.BaseViewModel
+import androidx.lifecycle.ViewModel
 
-class DetailViewModel : BaseViewModel() {
+class DetailViewModel : ViewModel() {
 
 }

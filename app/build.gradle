@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.storage)
 
+    debugImplementation(libs.leak.canary)
+
     testImplementation(libs.testing.junit)
     androidTestImplementation(libs.testing.androidx.junit)
     androidTestImplementation(libs.testing.espresso.core)

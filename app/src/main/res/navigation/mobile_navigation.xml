@@ -3,33 +3,77 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/home">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/login"
+        android:name="com.aktepetugce.favoriteplace.ui.login.LoginFragment"
+        tools:layout="@layout/fragment_login"
+        android:label="@string/home_title">
+        <action
+            android:id="@+id/action_login_to_forgotPassword"
+            app:destination="@id/forgotPassword" />
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/register" />
+        <action
+            android:id="@+id/action_login_to_home"
+            app:destination="@id/home"
+            app:popUpTo="@id/mobile_navigation"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/register"
+        android:name="com.aktepetugce.favoriteplace.ui.login.RegisterFragment"
+        tools:layout="@layout/fragment_register"
+        android:label="@string/register_title">
+        <action
+            android:id="@+id/action_register_to_home"
+            app:destination="@id/home"
+            app:popUpTo="@id/mobile_navigation"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/forgotPassword"
+        android:name="com.aktepetugce.favoriteplace.ui.login.ForgotPasswordFragment"
+        tools:layout="@layout/fragment_forgot_password"
+        android:label="@string/forgot_password_title">
+        <action
+            android:id="@+id/action_forgotPassword_to_login"
+            app:destination="@id/login"
+            app:popUpTo="@id/login"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/home"
         android:name="com.aktepetugce.favoriteplace.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="@string/home_title"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_navigation_home_to_detailFragment"
-            app:destination="@id/detailFragment" />
+            android:id="@+id/action_home_to_detailFragment"
+            app:destination="@id/locationDetail" />
+        <action
+            android:id="@+id/action_home_to_login"
+            app:destination="@id/login"
+            app:popUpTo="@+id/mobile_navigation"/>
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_add_location"
+        android:id="@+id/add_location"
         android:name="com.aktepetugce.favoriteplace.ui.addlocation.AddLocationFragment"
-        android:label="@string/title_add_location"
+        android:label="@string/add_location_title"
         tools:layout="@layout/fragment_add_location" >
         <action
-            android:id="@+id/action_navigation_add_location_to_mapsFragment"
-            app:destination="@id/navigation_maps" />
+            android:id="@+id/action_add_location_to_mapsFragment"
+            app:destination="@id/maps" />
     </fragment>
 
 
     <fragment
-        android:id="@+id/navigation_maps"
+        android:id="@+id/maps"
         android:name="com.aktepetugce.favoriteplace.ui.map.MapsFragment"
-        android:label="@string/set_location"
+        android:label="@string/set_location_title"
         tools:layout="@layout/fragment_maps">
         <argument
             android:name="place"
@@ -37,7 +81,7 @@
             app:nullable="true" />
     </fragment>
     <fragment
-        android:id="@+id/detailFragment"
+        android:id="@+id/locationDetail"
         android:name="com.aktepetugce.favoriteplace.ui.detail.DetailFragment"
         android:label="@string/location_info_title"
         tools:layout="@layout/fragment_detail">

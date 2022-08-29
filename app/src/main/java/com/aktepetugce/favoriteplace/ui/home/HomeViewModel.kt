@@ -19,10 +19,12 @@ class HomeViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
 ) : ViewModel() {
 
+    val isUserAuthenticated get() = authUseCases.isUserAuthenticated()
+
     val error = SingleLiveEvent<String>()
     val isLoading = SingleLiveEvent<Boolean>()
     val isSignOutSuccess = SingleLiveEvent<Boolean>()
-    
+
     fun signOut() = viewModelScope.launch {
         authUseCases.signOut().collect { response ->
             when(response) {

@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.storage)
 
+    implementation(libs.splash.screen)
+
     debugImplementation(libs.leak.canary)
 
     testImplementation(libs.testing.junit)

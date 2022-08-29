@@ -10,20 +10,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val authUseCases: AuthUseCases
-) : ViewModel() {
-
+class RegisterViewModel @Inject constructor(private val authUseCases: AuthUseCases) : ViewModel() {
     val error = SingleLiveEvent<String>()
     val isLoading = SingleLiveEvent<Boolean>()
-    val isSignInSuccess = SingleLiveEvent<Boolean>()
+    val isSignUpSuccess = SingleLiveEvent<Boolean>()
 
-    fun signIn(userEmail: String, password: String) = viewModelScope.launch {
-        authUseCases.signIn(userEmail, password).collect { response ->
+    fun signUp(userEmail: String, password: String) = viewModelScope.launch {
+        authUseCases.signUp(userEmail, password).collect { response ->
             when (response) {
                 is Response.Success<*> -> {
                     isLoading.value= false
-                    isSignInSuccess.value = true
+                    isSignUpSuccess.value = true
                 }
                 is Response.Error -> {
                     isLoading.value= false

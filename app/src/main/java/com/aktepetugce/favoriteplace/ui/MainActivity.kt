@@ -1,11 +1,10 @@
 package com.aktepetugce.favoriteplace.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -19,10 +18,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    companion object{
-        private const val TAG = "MainActivity"
-    }
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController : NavController
     private lateinit var bottomNav : BottomNavigationView
@@ -35,22 +30,23 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupNav()
-        Log.d(TAG,"onCreate")
     }
 
     private fun setupNav() {
-        bottomNav = binding.navView
+        bottomNav = binding.bottomNavigationView
 
-        navController = findNavController(R.id.nav_host_fragment_activity_main)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+        navController = navHostFragment.navController
+
         val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_add_location
-            )
+            setOf(R.id.home,
+                  R.id.login,
+                  R.id.add_location)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
 
-        val destinationsWithNoBottomNav = listOf(R.id.navigation_add_location, R.id.navigation_maps)
+        val destinationsWithNoBottomNav = listOf(R.id.login, R.id.register, R.id.forgotPassword, R.id.add_location, R.id.maps)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if(destinationsWithNoBottomNav.contains(destination.id)){
                 hideBottomNav()
@@ -58,31 +54,6 @@ class MainActivity : AppCompatActivity() {
                 showBottomNav()
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG,"onPause")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG,"onResume")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG,"onStart")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG,"onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG,"onDestroy")
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -9,10 +9,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
 import com.aktepetugce.favoriteplace.databinding.FragmentAddLocationBinding
 import com.aktepetugce.favoriteplace.domain.uimodel.UIPlace
@@ -40,7 +40,7 @@ class AddLocationFragment : BaseFragment<FragmentAddLocationBinding>(FragmentAdd
 
             nextButton.setOnClickListener {
                 if(typeEditText.text.isNullOrEmpty() || nameEditText.text.isNullOrEmpty()){
-                    Toast.makeText(requireContext(),"Name or Type cannot be empty!",Toast.LENGTH_LONG).show()
+                    showErrorMessage(getString(R.string.name_or_type_empty_error))
                 }else{
                     val uiPlace = UIPlace(
                         placeUserEmail = viewModel.currentUserEmail,
@@ -53,9 +53,10 @@ class AddLocationFragment : BaseFragment<FragmentAddLocationBinding>(FragmentAdd
                         placeLongitude = 0.0
                     )
                     val action =
-                        AddLocationFragmentDirections.actionNavigationAddLocationToMapsFragment(
+                        AddLocationFragmentDirections.actionAddLocationToMapsFragment(
                             uiPlace
                         )
+                    hideKeyboard()
                     findNavController().navigate(action)
                 }
             }

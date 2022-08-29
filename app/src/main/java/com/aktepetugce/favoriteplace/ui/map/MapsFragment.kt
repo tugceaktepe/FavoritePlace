@@ -78,7 +78,7 @@ class MapsFragment :
         })
         viewModel.isSaveSuccess.observe(viewLifecycleOwner, Observer {
             Toast.makeText(requireContext(), "Success", Toast.LENGTH_LONG).show()
-            findNavController().popBackStack(R.id.navigation_home, false)
+            findNavController().popBackStack(R.id.home, false)
         })
         viewModel.error.observe(viewLifecycleOwner, Observer {
             Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()

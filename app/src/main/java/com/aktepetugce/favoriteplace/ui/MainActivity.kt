@@ -3,6 +3,7 @@ package com.aktepetugce.favoriteplace.ui
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     @Inject lateinit var baseFragmentFactory: BaseFragmentFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         supportFragmentManager.fragmentFactory = baseFragmentFactory
         binding = ActivityMainBinding.inflate(layoutInflater)

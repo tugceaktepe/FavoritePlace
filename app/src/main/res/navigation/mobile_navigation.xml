@@ -79,6 +79,10 @@
             android:name="place"
             app:argType="com.aktepetugce.favoriteplace.domain.uimodel.UIPlace"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_maps_to_home"
+            app:destination="@id/home"
+            app:popUpTo="@+id/mobile_navigation"/>/>
     </fragment>
     <fragment
         android:id="@+id/locationDetail"

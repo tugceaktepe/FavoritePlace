@@ -15,4 +15,10 @@
     <string name="sign_up_text_2">Sign Up! 🤩</string>
     <string name="email_or_password_empty_error">Email or password can not be empty!</string>
     <string name="name_or_type_empty_error">Name or Type cannot be empty!</string>
+    <string name="log_out">Log out</string>
+    <string name="name">name</string>
+    <string name="type">type</string>
+    <string name="atmosphere">atmosphere</string>
+    <string name="map_marker_title">New Place</string>
+    <string name="save_location_info">Click On Save</string>
 </resources>

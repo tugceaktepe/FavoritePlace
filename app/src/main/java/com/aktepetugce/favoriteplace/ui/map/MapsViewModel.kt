@@ -2,11 +2,14 @@ package com.aktepetugce.favoriteplace.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.domain.uimodel.UIPlace
 import com.aktepetugce.favoriteplace.domain.usecase.place.PlaceUseCases
 import com.aktepetugce.favoriteplace.util.Response
-import com.aktepetugce.favoriteplace.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -16,14 +19,17 @@ class MapsViewModel  @Inject constructor(
     private val placeUseCases: PlaceUseCases
 ) : ViewModel() {
 
-    val error = SingleLiveEvent<String>()
-    val isLoading = SingleLiveEvent<Boolean>()
-    val isSaveSuccess = SingleLiveEvent<Boolean>()
+    private val _uiState = MutableStateFlow(MapsViewState())
+    val uiState: StateFlow<MapsViewState> = _uiState
 
     fun savePlace(place: UIPlace) = viewModelScope.launch {
         //TODO: Move this action to domain layer
         val placeId  = UUID.randomUUID().toString()
-        isLoading.value = true
+        _uiState.update { currentViewState ->
+            currentViewState.copy(
+                isLoading = true
+            )
+        }
         if(place.placeImage != null){
             placeUseCases.savePlaceImage(placeId,place.placeImage!!).collect { response ->
                 when (response) {
@@ -31,8 +37,9 @@ class MapsViewModel  @Inject constructor(
                         downloadImageUrl(placeId, place)
                     }
                     is Response.Error -> {
-                        isLoading.value = false
-                        error.value = response.message
+                        _uiState.update { currentState ->
+                            currentState.copy(errorMessage = response.message, isLoading = false)
+                        }
                     }
                 }
             }
@@ -50,8 +57,9 @@ class MapsViewModel  @Inject constructor(
                     savePlaceDetail(placeId,uiPlace)
                 }
                 is Response.Error -> {
-                    isLoading.value = false
-                    error.value = response.message
+                    _uiState.update { currentState ->
+                        currentState.copy(errorMessage = response.message, isLoading = false)
+                    }
                 }
             }
         }
@@ -61,14 +69,21 @@ class MapsViewModel  @Inject constructor(
         placeUseCases.savePlaceDetail(placeId,uiPlace).collect { response ->
             when (response) {
                 is Response.Success<*> -> {
-                    isLoading.value=false
-                    isSaveSuccess.value = true
+                    _uiState.update { currentState ->
+                        currentState.copy(nextDestination = R.id.action_maps_to_home, isLoading = false)
+                    }
                 }
                 is Response.Error -> {
-                    isLoading.value = false
-                    error.value = response.message
+                    _uiState.update { currentState ->
+                        currentState.copy(errorMessage = response.message, isLoading = false)
+                    }
                 }
             }
+        }
+    }
+    fun userMessageShown() {
+        _uiState.update { currentState ->
+            currentState.copy(errorMessage = null)
         }
     }
 

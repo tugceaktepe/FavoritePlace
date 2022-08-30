@@ -34,13 +34,13 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
                 }
             }
         }
-        setObservers()
+        subscribeObservers()
     }
-    private fun setObservers(){
+    private fun subscribeObservers(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
-                    binding.progressBar.isVisible = uiState.registerStarted
+                    binding.progressBar.isVisible = uiState.isLoading
                     uiState.errorMessage?.let {
                         showErrorMessage(it)
                         viewModel.userMessageShown()

@@ -17,7 +17,7 @@ class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginViewState(loginStarted = false))
+    private val _uiState = MutableStateFlow(LoginViewState())
     val uiState: StateFlow<LoginViewState> = _uiState
 
     fun signIn(userEmail: String, password: String) = viewModelScope.launch {
@@ -27,18 +27,18 @@ class LoginViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         currentState.copy(
                             nextDestination = R.id.action_login_to_home,
-                            loginStarted = false
+                            isLoading = false
                         )
                     }
                 }
                 is Response.Error -> {
                     _uiState.update { currentState ->
-                        currentState.copy(errorMessage = response.message, loginStarted = false)
+                        currentState.copy(errorMessage = response.message, isLoading = false)
                     }
                 }
                 else -> {
                     _uiState.update { currentState ->
-                        currentState.copy(loginStarted = true)
+                        currentState.copy(isLoading = true)
                     }
                 }
             }
@@ -46,8 +46,8 @@ class LoginViewModel @Inject constructor(
     }
 
     fun userMessageShown() {
-        _uiState.value = LoginViewState(
-            errorMessage = null
-        )
+        _uiState.update { currentState ->
+            currentState.copy(errorMessage = null)
+        }
     }
 }

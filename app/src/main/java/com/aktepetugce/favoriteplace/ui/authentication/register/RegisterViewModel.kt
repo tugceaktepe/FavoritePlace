@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(private val authUseCases: AuthUseCases) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RegisterViewState(registerStarted = false))
+    private val _uiState = MutableStateFlow(RegisterViewState())
     val uiState: StateFlow<RegisterViewState> = _uiState
 
     fun signUp(userEmail: String, password: String) = viewModelScope.launch {
@@ -25,18 +25,18 @@ class RegisterViewModel @Inject constructor(private val authUseCases: AuthUseCas
                     _uiState.update { currentState ->
                         currentState.copy(
                             nextDestination = R.id.action_register_to_home,
-                            registerStarted = false
+                            isLoading = false
                         )
                     }
                 }
                 is Response.Error -> {
                     _uiState.update { currentState ->
-                        currentState.copy(errorMessage = response.message, registerStarted = false)
+                        currentState.copy(errorMessage = response.message, isLoading = false)
                     }
                 }
                 else -> {
                     _uiState.update { currentState ->
-                        currentState.copy(registerStarted = true)
+                        currentState.copy(isLoading = true)
                     }
                 }
             }
@@ -44,8 +44,8 @@ class RegisterViewModel @Inject constructor(private val authUseCases: AuthUseCas
     }
 
     fun userMessageShown() {
-        _uiState.value = RegisterViewState(
-            errorMessage = null
-        )
+        _uiState.update { currentState ->
+            currentState.copy(errorMessage = null)
+        }
     }
 }

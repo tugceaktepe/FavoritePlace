@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -18,29 +19,25 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun signUp(userEmail: String, password: String) = flow<Response<*>> {
-        emit(Response.Loading)
         auth.createUserWithEmailAndPassword(userEmail, password).await()
         emit(Response.Success(true))
-    }.catch {
-        emit(Response.Error(it.message ?: it.toString()))
     }.flowOn(dispatcher)
+        .onStart { emit(Response.Loading) }
+        .catch { emit(Response.Error(it.message ?: it.toString())) }
 
     override fun signIn(userEmail: String, password: String) = flow<Response<*>> {
-        emit(Response.Loading)
         auth.signInWithEmailAndPassword(userEmail, password).await()
         emit(Response.Success(true))
-    }.catch {
-        emit(Response.Error(it.message ?: it.toString()))
     }.flowOn(dispatcher)
+        .onStart { emit(Response.Loading) }
+        .catch { emit(Response.Error(it.message ?: it.toString())) }
 
-
-    override fun signOut() = flow {
-        emit(Response.Loading)
+    override fun signOut() = flow<Response<*>> {
         auth.signOut()
         emit(Response.Success(true))
-    }.catch {
-        emit(Response.Error(it.message ?: it.toString()))
     }.flowOn(dispatcher)
+        .onStart { emit(Response.Loading) }
+        .catch { emit(Response.Error(it.message ?: it.toString())) }
 
     override fun getCurrentUserEmail(): String {
         return auth.currentUser?.email ?: ""

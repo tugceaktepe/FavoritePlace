@@ -14,8 +14,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
+import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.aktepetugce.favoriteplace.R
@@ -29,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MapsFragment :
@@ -55,34 +59,37 @@ class MapsFragment :
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel =
-            ViewModelProvider(this).get(MapsViewModel::class.java)
-        subscribeToObservers()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val place = args.place
         place?.let {
             mUIPlace = it
         }
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
     }
 
-    private fun subscribeToObservers() {
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                binding.progressBar.visibility = View.GONE
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MapsViewModel::class.java)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    binding.progressBar.isVisible = uiState.isLoading
+                    uiState.errorMessage?.let {
+                        showErrorMessage(it)
+                        viewModel.userMessageShown()
+                    }
+                    uiState.nextDestination?.let { nextPage ->
+                        findNavController().navigate(nextPage)
+                    }
+                }
             }
-        })
-        viewModel.isSaveSuccess.observe(viewLifecycleOwner, Observer {
-            Toast.makeText(requireContext(), "Success", Toast.LENGTH_LONG).show()
-            findNavController().popBackStack(R.id.home, false)
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer {
-            Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -151,12 +158,13 @@ class MapsFragment :
     override fun onMapLongClick(latLng: LatLng) {
         longitude = latLng.longitude
         latitude = latLng.latitude
-        mGoogleMap.addMarker(MarkerOptions().title("New Place").position(latLng))
-        Toast.makeText(requireContext(), "Click On Save", Toast.LENGTH_LONG).show()
+        mGoogleMap.addMarker(MarkerOptions().title(getString(R.string.map_marker_title)).position(latLng))
+        Toast.makeText(requireContext(), getString(R.string.save_location_info), Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        //TODO: Fix memory leaks
         locationManager.removeUpdates(locationListener)
     }
 }

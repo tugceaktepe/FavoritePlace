@@ -38,13 +38,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 findNavController().navigate(R.id.action_login_to_register)
             }
         }
-        setObservers()
+        subscribeObservers()
     }
-    private fun setObservers(){
+    private fun subscribeObservers(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
-                    binding.progressBar.isVisible = uiState.loginStarted
+                    binding.progressBar.isVisible = uiState.isLoading
                     uiState.errorMessage?.let {
                         showErrorMessage(it)
                         viewModel.userMessageShown()

@@ -2,32 +2,50 @@ package com.aktepetugce.favoriteplace.ui.authentication.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.domain.usecase.authentication.AuthUseCases
 import com.aktepetugce.favoriteplace.util.Response
-import com.aktepetugce.favoriteplace.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(private val authUseCases: AuthUseCases) : ViewModel() {
-    val error = SingleLiveEvent<String>()
-    val isLoading = SingleLiveEvent<Boolean>()
-    val isSignUpSuccess = SingleLiveEvent<Boolean>()
+
+    private val _uiState = MutableStateFlow(RegisterViewState(registerStarted = false))
+    val uiState: StateFlow<RegisterViewState> = _uiState
 
     fun signUp(userEmail: String, password: String) = viewModelScope.launch {
         authUseCases.signUp(userEmail, password).collect { response ->
             when (response) {
                 is Response.Success<*> -> {
-                    isLoading.value= false
-                    isSignUpSuccess.value = true
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            nextDestination = R.id.action_register_to_home,
+                            registerStarted = false
+                        )
+                    }
                 }
                 is Response.Error -> {
-                    isLoading.value= false
-                    error.value = response.message
+                    _uiState.update { currentState ->
+                        currentState.copy(errorMessage = response.message, registerStarted = false)
+                    }
                 }
-                else -> isLoading.value = true
+                else -> {
+                    _uiState.update { currentState ->
+                        currentState.copy(registerStarted = true)
+                    }
+                }
             }
         }
+    }
+
+    fun userMessageShown() {
+        _uiState.value = RegisterViewState(
+            errorMessage = null
+        )
     }
 }

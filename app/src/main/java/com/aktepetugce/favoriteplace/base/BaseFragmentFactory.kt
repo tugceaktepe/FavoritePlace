@@ -12,6 +12,7 @@ class BaseFragmentFactory @Inject constructor(
     private val placeRecyclerAdapter: PlaceRecyclerAdapter,
     private val glide : RequestManager
 ) : FragmentFactory() {
+    //TODO: Fix memory leaks
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when(className){
             HomeFragment::class.java.name -> HomeFragment(placeRecyclerAdapter)

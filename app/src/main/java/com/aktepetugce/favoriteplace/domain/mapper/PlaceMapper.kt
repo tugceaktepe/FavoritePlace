@@ -4,6 +4,7 @@ import com.aktepetugce.favoriteplace.data.model.Place
 import com.aktepetugce.favoriteplace.domain.uimodel.UIPlace
 
 class PlaceMapper {
+    //TODO: Rename ui model and mappers
     fun map(model: Place?): UIPlace? {
         return model?.toUIPlace()
     }

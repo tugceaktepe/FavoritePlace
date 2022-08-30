@@ -1,14 +1,18 @@
-package com.aktepetugce.favoriteplace.ui.login
+package com.aktepetugce.favoriteplace.ui.authentication.login
 
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
 import com.aktepetugce.favoriteplace.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -34,18 +38,24 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 findNavController().navigate(R.id.action_login_to_register)
             }
         }
-        setObservers()
+        subscribeObservers()
     }
-    private fun setObservers(){
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.progressBar.isVisible = it
-        }
-        viewModel.isSignInSuccess.observe(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_login_to_home)
-        }
-        viewModel.error.observe(viewLifecycleOwner) {
-            showErrorMessage(it)
+    private fun subscribeObservers(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    binding.progressBar.isVisible = uiState.isLoading
+                    uiState.errorMessage?.let {
+                        showErrorMessage(it)
+                        viewModel.userMessageShown()
+                    }
+                    uiState.nextDestination?.let { nextPage ->
+                        findNavController().navigate(nextPage)
+                    }
+                }
+            }
         }
     }
+
 
 }

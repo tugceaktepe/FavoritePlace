@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.ui.login
+package com.aktepetugce.favoriteplace.ui.authentication.register
 
 import android.os.Bundle
 import android.view.View

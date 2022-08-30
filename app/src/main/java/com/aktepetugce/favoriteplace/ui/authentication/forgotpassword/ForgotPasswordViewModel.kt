@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.ui.login
+package com.aktepetugce.favoriteplace.ui.authentication.forgotpassword
 
 import androidx.lifecycle.ViewModel
 

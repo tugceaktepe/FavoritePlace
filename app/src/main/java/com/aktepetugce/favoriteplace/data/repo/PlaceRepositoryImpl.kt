@@ -9,10 +9,7 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -22,7 +19,7 @@ class PlaceRepositoryImpl @Inject constructor(
     private val databaseReference: DatabaseReference,
     private val storage: FirebaseStorage,
     private val storageReference: StorageReference,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
 ) : PlaceRepository {
 
     override fun savePlaceDetail(placeId: String, place: Place) = flow<Response<*>> {
@@ -66,17 +63,15 @@ class PlaceRepositoryImpl @Inject constructor(
             .child("instance_id")
             .setValue(System.currentTimeMillis())
         emit(Response.Success(true))
-    }.catch {
-        emit(Response.Error(it.message ?: it.toString()))
     }.flowOn(dispatcher)
+        .catch { emit(Response.Error(it.message ?: it.toString())) }
 
-    override fun saveImage(imagePath: String, imageUri: Uri) = flow<Response<*>>{
+    override fun saveImage(imagePath: String, imageUri: Uri) = flow<Response<*>> {
         val storageReferenceChild = this@PlaceRepositoryImpl.storageReference.child(imagePath)
         storageReferenceChild.putFile(imageUri).await()
         emit(Response.Success(true))
-    }.catch {
-        emit(Response.Error(it.message ?: it.toString()))
     }.flowOn(dispatcher)
+        .catch { emit(Response.Error(it.message ?: it.toString())) }
 
     override fun downloadImageUrl(imagePath: String) = flow<Response<*>> {
         val imageReference = storage.getReference(imagePath)
@@ -86,12 +81,11 @@ class PlaceRepositoryImpl @Inject constructor(
         } else {
             emit(Response.Error("Download Error"))
         }
-    }.catch {
-        emit(Response.Error(it.message ?: it.toString()))
     }.flowOn(dispatcher)
+     .catch { emit(Response.Error(it.message ?: it.toString())) }
 
     override fun fetchPlaces(userEmail: String) = callbackFlow {
-         val postListener = object : ValueEventListener {
+        val postListener = object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 this@callbackFlow.trySendBlocking(Response.Error(error.message))
                 channel.close()
@@ -112,7 +106,7 @@ class PlaceRepositoryImpl @Inject constructor(
         awaitClose {
             query.removeEventListener(postListener)
         }
-    }.catch {
-        emit(Response.Error(it.message ?: it.toString()))
     }.flowOn(dispatcher)
+        .catch { emit(Response.Error(it.message ?: it.toString())) }
+        .onStart { emit(Response.Loading) }
 }

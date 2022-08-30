@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/login"
-        android:name="com.aktepetugce.favoriteplace.ui.login.LoginFragment"
+        android:name="com.aktepetugce.favoriteplace.ui.authentication.login.LoginFragment"
         tools:layout="@layout/fragment_login"
         android:label="@string/home_title">
         <action
@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/register"
-        android:name="com.aktepetugce.favoriteplace.ui.login.RegisterFragment"
+        android:name="com.aktepetugce.favoriteplace.ui.authentication.register.RegisterFragment"
         tools:layout="@layout/fragment_register"
         android:label="@string/register_title">
         <action
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/forgotPassword"
-        android:name="com.aktepetugce.favoriteplace.ui.login.ForgotPasswordFragment"
+        android:name="com.aktepetugce.favoriteplace.ui.authentication.forgotpassword.ForgotPasswordFragment"
         tools:layout="@layout/fragment_forgot_password"
         android:label="@string/forgot_password_title">
         <action
@@ -79,6 +79,10 @@
             android:name="place"
             app:argType="com.aktepetugce.favoriteplace.domain.uimodel.UIPlace"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_maps_to_home"
+            app:destination="@id/home"
+            app:popUpTo="@+id/mobile_navigation"/>/>
     </fragment>
     <fragment
         android:id="@+id/locationDetail"

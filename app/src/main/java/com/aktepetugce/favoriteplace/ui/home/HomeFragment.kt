@@ -7,8 +7,10 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.aktepetugce.favoriteplace.R
@@ -16,6 +18,7 @@ import com.aktepetugce.favoriteplace.base.BaseFragment
 import com.aktepetugce.favoriteplace.databinding.FragmentHomeBinding
 import com.aktepetugce.favoriteplace.ui.home.adapter.PlaceRecyclerAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -28,8 +31,8 @@ class HomeFragment @Inject constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        if(viewModel.isUserAuthenticated){
-            subscribeToObservers()
+        if (viewModel.uiState.value.isUserAuthenticated) {
+            subscribeObservers()
             binding.recylerViewLocations.adapter = placeRecyclerAdapter
             binding.recylerViewLocations.addItemDecoration(
                 (DividerItemDecoration(
@@ -38,30 +41,37 @@ class HomeFragment @Inject constructor(
                 ))
             )
             placeRecyclerAdapter.setOnItemClickListener { position ->
-                val place = viewModel.placesList.value?.get(position)
-                val action = HomeFragmentDirections.actionHomeToDetailFragment(place)
-                findNavController().navigate(action)
+                viewModel.uiState.value.placeList?.let {
+                    val action = HomeFragmentDirections.actionHomeToDetailFragment(it[position])
+                    findNavController().navigate(action)
+                }
             }
-            val userEmail = viewModel.currentUserEmail
-            viewModel.fetchPlaces(userEmail)
-        }else{
+            if (!viewModel.uiState.value.placesLoaded) {
+                viewModel.fetchPlaces()
+            }
+        } else {
             findNavController().navigate(R.id.action_home_to_login)
         }
     }
 
-    private fun subscribeToObservers() {
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            binding.progressBar.isVisible = it
-        })
-        viewModel.isSignOutSuccess.observe(viewLifecycleOwner, Observer {
-            findNavController().navigate(R.id.action_home_to_login)
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer {
-            showErrorMessage(it)
-        })
-        viewModel.placesList.observe(viewLifecycleOwner, Observer {
-            (binding.recylerViewLocations.adapter as? PlaceRecyclerAdapter)?.submitList(it)
-        })
+    private fun subscribeObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    binding.progressBar.isVisible = uiState.isLoading
+                    uiState.errorMessage?.let {
+                        showErrorMessage(it)
+                        viewModel.userMessageShown()
+                    }
+                    if (uiState.placesLoaded) {
+                        placeRecyclerAdapter.submitList(uiState.placeList)
+                    }
+                    if(uiState.signOutSuccess){
+                        findNavController().navigate(R.id.action_home_to_login)
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -1,6 +1,9 @@
 package com.aktepetugce.favoriteplace.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
+        handleIntent()
         super.onCreate(savedInstanceState)
         supportFragmentManager.fragmentFactory = baseFragmentFactory
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -68,5 +72,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideBottomNav() {
         bottomNav.visibility = View.GONE
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleIntent()
+    }
+    private fun handleIntent(){
+        val appLinkAction = intent.action
+        val appLinkData: Uri? = intent.data
+        if (Intent.ACTION_VIEW == appLinkAction) {
+            appLinkData?.lastPathSegment?.also { recipeId ->
+                Uri.parse("content://tugceaktepe.github.io/favoriteplace/")
+                    .buildUpon()
+                    .appendPath(recipeId)
+                    .build().also { appData ->
+                        Log.d(TAG, "Appdata: $appData")
+                    }
+            }
+        }
+    }
+    companion object{
+        private const val TAG = "MainActivity"
     }
 }

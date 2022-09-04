@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.aktepetugce.favoriteplace">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -24,12 +25,24 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
+            <tools:validation testUrl="https://tugceaktepe.github.io/favoriteplace" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-    </application>
+            <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
 
-</manifest>
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+            <data
+                android:host="tugceaktepe.github.io"
+                android:pathPattern="/favoriteplace"
+                android:scheme="https" />
+        </intent-filter>
+    </activity>
+</application>
+
+    </manifest>

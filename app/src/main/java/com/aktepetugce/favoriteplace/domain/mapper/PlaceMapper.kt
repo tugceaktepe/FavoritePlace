@@ -1,10 +1,10 @@
 package com.aktepetugce.favoriteplace.domain.mapper
 
 import com.aktepetugce.favoriteplace.data.model.Place
-import com.aktepetugce.favoriteplace.domain.uimodel.UIPlace
+import com.aktepetugce.favoriteplace.domain.model.UIPlace
 
 class PlaceMapper {
-    //TODO: Rename ui model and mappers
+    // TODO: Rename ui model and mappers
     fun map(model: Place?): UIPlace? {
         return model?.toUIPlace()
     }
@@ -12,11 +12,11 @@ class PlaceMapper {
     private fun Place.toUIPlace() = UIPlace(
         placeUserEmail = this.userEmail ?: "",
         placeName = this.name ?: "",
-        placeImage = null ,
+        placeImage = null,
         placeType = this.type ?: "",
-        placeAtmosphere =  this.atmosphere ?: "",
+        placeAtmosphere = this.atmosphere ?: "",
         placeImageUrl = this.imageUrl ?: "",
-        placeLatitude = this.latitude?.toDouble() ?: 0.0 ,
+        placeLatitude = this.latitude?.toDouble() ?: 0.0,
         placeLongitude = this.longitude?.toDouble() ?: 0.0
     )
 }

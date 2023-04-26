@@ -1,8 +1,8 @@
 package com.aktepetugce.favoriteplace.domain.usecase.place
 
 import com.aktepetugce.favoriteplace.data.repo.PlaceRepository
-import com.aktepetugce.favoriteplace.domain.uimodel.UIPlace
-import com.aktepetugce.favoriteplace.domain.uimodel.toPlace
+import com.aktepetugce.favoriteplace.domain.model.UIPlace
+import com.aktepetugce.favoriteplace.domain.model.toPlace
 
 class SavePlaceDetail(
     private val repository: PlaceRepository

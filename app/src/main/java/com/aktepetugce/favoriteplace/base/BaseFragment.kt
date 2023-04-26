@@ -10,18 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 
-
 open class BaseFragment<T : ViewBinding>(
-    private val inflateMethod : (LayoutInflater, ViewGroup?, Boolean) -> T,
-    private val hasOptionsMenu : Boolean) : Fragment(){
+    private val inflateMethod: (LayoutInflater, ViewGroup?, Boolean) -> T,
+    private val hasOptionsMenu: Boolean
+) : Fragment() {
 
-    private var _binding : T? = null
-    val binding : T get() = _binding!!
-
+    private var _binding: T? = null
+    val binding: T get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = inflateMethod.invoke(inflater, container, false)
-        if(hasOptionsMenu) {
+        if (hasOptionsMenu) {
             setHasOptionsMenu(true)
         }
         return binding.root
@@ -32,7 +31,7 @@ open class BaseFragment<T : ViewBinding>(
         _binding = null
     }
 
-    fun hideKeyboard(){
+    fun hideKeyboard() {
         val view: View? = activity?.currentFocus
         if (view != null) {
             val inputMethodManager: InputMethodManager? =
@@ -41,7 +40,7 @@ open class BaseFragment<T : ViewBinding>(
         }
     }
 
-    fun showErrorMessage(errorMessage : String){
+    fun showErrorMessage(errorMessage: String) {
         Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 }

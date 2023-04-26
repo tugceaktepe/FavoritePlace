@@ -2,31 +2,27 @@ package com.aktepetugce.favoriteplace.ui.detail
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
 import com.aktepetugce.favoriteplace.databinding.FragmentDetailBinding
-import com.bumptech.glide.RequestManager
+import com.aktepetugce.favoriteplace.di.GlideApp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-class DetailFragment @Inject constructor(
-    private val glide : RequestManager
-) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate,false), OnMapReadyCallback {
+@AndroidEntryPoint
+class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate, false), OnMapReadyCallback {
 
-    private lateinit var viewModel: DetailViewModel
     private val args: DetailFragmentArgs by navArgs()
-    private lateinit var mGoogleMap : GoogleMap
+    private lateinit var mGoogleMap: GoogleMap
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapDetail) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
@@ -36,21 +32,26 @@ class DetailFragment @Inject constructor(
         getLocationData()
     }
 
-    private fun getLocationData(){
+    private fun getLocationData() {
         val place = args.place
         place?.let { place ->
-            with(binding){
-                nameTextView.text = place.placeName
+            with(binding) {
+                textViewName.text = place.placeName
                 typeTextView.text = place.placeType
-                glide.load(place.placeImageUrl).into(placeImageView)
+                GlideApp.with(requireContext())
+                    .load(place.placeImageUrl)
+                    .into(imageViewPlace)
             }
             mGoogleMap.clear()
-            if(place.placeLatitude != 0.0 && place.placeLongitude != 0.0){
+            if (place.placeLatitude != 0.0 && place.placeLongitude != 0.0) {
                 val placeLocation = LatLng(place.placeLatitude, place.placeLongitude)
                 mGoogleMap.addMarker(MarkerOptions().position(placeLocation).title(place.placeName))
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation, 15f))
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation, ZOOM_OPTION))
             }
         }
     }
 
+    companion object {
+        const val ZOOM_OPTION = 15f
+    }
 }

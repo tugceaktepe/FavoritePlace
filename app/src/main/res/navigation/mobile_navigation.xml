@@ -77,12 +77,12 @@
         tools:layout="@layout/fragment_maps">
         <argument
             android:name="place"
-            app:argType="com.aktepetugce.favoriteplace.domain.uimodel.UIPlace"
+            app:argType="com.aktepetugce.favoriteplace.domain.model.UIPlace"
             app:nullable="true" />
         <action
             android:id="@+id/action_maps_to_home"
             app:destination="@id/home"
-            app:popUpTo="@+id/mobile_navigation"/>/>
+            app:popUpTo="@+id/mobile_navigation"/>
     </fragment>
     <fragment
         android:id="@+id/locationDetail"
@@ -91,7 +91,7 @@
         tools:layout="@layout/fragment_detail">
         <argument
             android:name="place"
-            app:argType="com.aktepetugce.favoriteplace.domain.uimodel.UIPlace"
+            app:argType="com.aktepetugce.favoriteplace.domain.model.UIPlace"
             app:nullable="true" />
     </fragment>
 

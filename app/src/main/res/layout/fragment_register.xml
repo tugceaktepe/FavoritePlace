@@ -7,7 +7,7 @@
     android:paddingHorizontal="24dp">
 
     <TextView
-        android:id="@+id/welcomeTextView"
+        android:id="@+id/textViewWelcome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -32,7 +32,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailEditTextLayout"
+        android:id="@+id/textLayoutEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"

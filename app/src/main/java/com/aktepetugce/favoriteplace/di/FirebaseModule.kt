@@ -16,7 +16,7 @@ class FirebaseModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseDatabase() : FirebaseDatabase = FirebaseDatabase.getInstance()
+    fun provideFirebaseDatabase(): FirebaseDatabase = FirebaseDatabase.getInstance()
 
     @Provides
     @Singleton
@@ -24,14 +24,13 @@ class FirebaseModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseAuth() : FirebaseAuth = FirebaseAuth.getInstance()
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides
     @Singleton
-    fun provideFirebaseStorage() : FirebaseStorage = FirebaseStorage.getInstance()
+    fun provideFirebaseStorage(): FirebaseStorage = FirebaseStorage.getInstance()
 
     @Provides
     @Singleton
-    fun provideFirebaseStorageReference(firebaseStorage: FirebaseStorage) : StorageReference = firebaseStorage.reference
-
+    fun provideFirebaseStorageReference(firebaseStorage: FirebaseStorage): StorageReference = firebaseStorage.reference
 }

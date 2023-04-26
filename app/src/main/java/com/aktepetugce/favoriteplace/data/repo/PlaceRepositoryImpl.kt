@@ -3,16 +3,23 @@ package com.aktepetugce.favoriteplace.data.repo
 import android.net.Uri
 import com.aktepetugce.favoriteplace.data.model.Place
 import com.aktepetugce.favoriteplace.util.Response
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-
 
 class PlaceRepositoryImpl @Inject constructor(
     private val database: FirebaseDatabase,
@@ -82,7 +89,7 @@ class PlaceRepositoryImpl @Inject constructor(
             emit(Response.Error("Download Error"))
         }
     }.flowOn(dispatcher)
-     .catch { emit(Response.Error(it.message ?: it.toString())) }
+        .catch { emit(Response.Error(it.message ?: it.toString())) }
 
     override fun fetchPlaces(userEmail: String) = callbackFlow {
         val postListener = object : ValueEventListener {

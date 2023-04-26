@@ -12,19 +12,18 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
 import com.aktepetugce.favoriteplace.databinding.FragmentMapsBinding
-import com.aktepetugce.favoriteplace.domain.uimodel.UIPlace
+import com.aktepetugce.favoriteplace.domain.model.UIPlace
+import com.aktepetugce.favoriteplace.util.extension.launchAndCollectIn
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -32,12 +31,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MapsFragment :
     BaseFragment<FragmentMapsBinding>(FragmentMapsBinding::inflate, hasOptionsMenu = true),
-    OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+    OnMapReadyCallback,
+    GoogleMap.OnMapLongClickListener {
 
     private val args: MapsFragmentArgs by navArgs()
     private lateinit var viewModel: MapsViewModel
@@ -54,7 +53,7 @@ class MapsFragment :
         val firstTimeCheck = sharedPref?.getBoolean("firstTimeCheck", false)
         if (firstTimeCheck != null) {
             val newLocation = LatLng(location.latitude, location.longitude)
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15f))
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, ZOOM_OPTION))
             sharedPref.edit().putBoolean("firstTimeCheck", true).apply()
         }
     }
@@ -76,18 +75,14 @@ class MapsFragment :
     }
 
     private fun subscribeObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    binding.progressBar.isVisible = uiState.isLoading
-                    uiState.errorMessage?.let {
-                        showErrorMessage(it)
-                        viewModel.userMessageShown()
-                    }
-                    uiState.nextDestination?.let { nextPage ->
-                        findNavController().navigate(nextPage)
-                    }
-                }
+        viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
+            binding.progressBar.isVisible = uiState.isLoading
+            uiState.errorMessage?.let {
+                showErrorMessage(it)
+                viewModel.userMessageShown()
+            }
+            uiState.nextDestination?.let { nextPage ->
+                findNavController().navigate(nextPage)
             }
         }
     }
@@ -113,46 +108,40 @@ class MapsFragment :
         mGoogleMap = googleMap
         googleMap.setOnMapLongClickListener(this)
         locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        } else {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 0L,
                 0f,
                 locationListener
             )
-            mGoogleMap.clear()
-            val lastKnownLocation =
-                locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            if (lastKnownLocation != null) {
-                val lastUserLocation =
-                    LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastUserLocation, 15f))
-            }
+            initializeLocation()
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            mGoogleMap.clear()
-            val lastKnownLocation =
-                locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            if (lastKnownLocation != null) {
-                val lastUserLocation =
-                    LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastUserLocation, 15f))
-            }
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            initializeLocation()
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun initializeLocation() {
+        mGoogleMap.clear()
+        val lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        if (lastKnownLocation != null) {
+            val lastUserLocation =
+                LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastUserLocation, ZOOM_OPTION))
+        }
     }
 
     override fun onMapLongClick(latLng: LatLng) {
@@ -164,7 +153,11 @@ class MapsFragment :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        //TODO: Fix memory leaks
+        // TODO: Fix memory leaks
         locationManager.removeUpdates(locationListener)
+    }
+
+    companion object {
+        const val ZOOM_OPTION = 15f
     }
 }

@@ -9,7 +9,7 @@
     android:paddingVertical="8dp">
 
     <ImageView
-        android:id="@+id/placeImageView"
+        android:id="@+id/imageViewThumbnail"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"
@@ -18,7 +18,7 @@
         tools:src="@drawable/ic_launcher_background"/>
 
     <TextView
-        android:id="@+id/placeNameTextView"
+        android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -28,8 +28,8 @@
         android:maxWidth="250dp"
         android:textSize="16sp"
         android:ellipsize="end"
-        app:layout_constraintStart_toEndOf="@+id/placeImageView"
-        app:layout_constraintTop_toTopOf="@+id/placeImageView"
+        app:layout_constraintStart_toEndOf="@+id/imageViewThumbnail"
+        app:layout_constraintTop_toTopOf="@+id/imageViewThumbnail"
         tools:text="Place Name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

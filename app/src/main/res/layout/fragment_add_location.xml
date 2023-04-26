@@ -14,7 +14,7 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/nameEditText"
+                android:id="@+id/editTextName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -27,7 +27,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/typeEditText"
+                android:id="@+id/editTextLocationType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -37,10 +37,10 @@
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
             <EditText
-                android:id="@+id/atmosphereEditText"
+                android:id="@+id/editTextAtmosphere"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -50,10 +50,10 @@
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/typeEditText" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextLocationType" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/imageViewLocation"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="32dp"
@@ -61,7 +61,7 @@
                 android:layout_marginBottom="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/atmosphereEditText"
+                app:layout_constraintTop_toBottomOf="@+id/editTextAtmosphere"
                 app:srcCompat="@drawable/ic_launcher_background" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -76,10 +76,10 @@
         android:paddingHorizontal="8dp"
         android:paddingVertical="8dp">
         <Button
-            android:id="@+id/nextButton"
+            android:id="@+id/buttonNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Next" />
+            android:text="@string/next" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

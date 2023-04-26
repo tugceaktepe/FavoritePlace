@@ -2,7 +2,7 @@ package com.aktepetugce.favoriteplace.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aktepetugce.favoriteplace.domain.uimodel.UIPlace
+import com.aktepetugce.favoriteplace.domain.model.UIPlace
 import com.aktepetugce.favoriteplace.domain.usecase.authentication.AuthUseCases
 import com.aktepetugce.favoriteplace.domain.usecase.place.PlaceUseCases
 import com.aktepetugce.favoriteplace.util.Response

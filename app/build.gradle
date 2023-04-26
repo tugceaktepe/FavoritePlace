@@ -9,15 +9,16 @@ plugins {
     alias libs.plugins.firebase.crashlitycs
     alias libs.plugins.maps.platform.secrets
     alias libs.plugins.gms.google.services
+    alias libs.plugins.detekt
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.aktepetugce.favoriteplace"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -40,6 +41,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+}
+
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
 }
 
 dependencies {
@@ -71,6 +79,8 @@ dependencies {
     implementation(libs.splash.screen)
 
     debugImplementation(libs.leak.canary)
+
+    detektPlugins(libs.detekt.formatting)
 
     testImplementation(libs.testing.junit)
     androidTestImplementation(libs.testing.androidx.junit)

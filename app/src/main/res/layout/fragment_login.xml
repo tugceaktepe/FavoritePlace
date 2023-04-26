@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -101,7 +101,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/signUpTextView1"
+        android:id="@+id/textViewSignUpTextOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -112,15 +112,15 @@
         android:text="@string/sign_up_text" />
 
     <TextView
-        android:id="@+id/signUpTextView2"
+        android:id="@+id/textViewSignUpTextTwo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="16sp"
         android:layout_marginStart="8dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/signUpTextView1"
-        app:layout_constraintTop_toTopOf="@+id/signUpTextView1"
+        app:layout_constraintStart_toEndOf="@+id/textViewSignUpTextOne"
+        app:layout_constraintTop_toTopOf="@+id/textViewSignUpTextOne"
         android:text="@string/sign_up_text_2"/>
 
     <ProgressBar

@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.util
+package com.aktepetugce.favoriteplace.common.util
 
 object StorageUtil {
     fun formatImagePath(imageId: String): String {

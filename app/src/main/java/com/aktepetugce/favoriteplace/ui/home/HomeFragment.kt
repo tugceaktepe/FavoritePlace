@@ -13,9 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
+import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.databinding.FragmentHomeBinding
 import com.aktepetugce.favoriteplace.ui.home.adapter.PlaceRecyclerAdapter
-import com.aktepetugce.favoriteplace.util.extension.launchAndCollectIn
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,28 +29,25 @@ class HomeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (viewModel.uiState.value.isUserAuthenticated) {
-            subscribeObservers()
-            binding.recyclerViewLocations.adapter = placeRecyclerAdapter
-            binding.recyclerViewLocations.addItemDecoration(
-                (
-                    DividerItemDecoration(
-                        requireContext(),
-                        DividerItemDecoration.VERTICAL
-                    )
-                    )
-            )
-            placeRecyclerAdapter.setOnItemClickListener { position ->
-                viewModel.uiState.value.placeList?.let {
-                    val action = HomeFragmentDirections.actionHomeToDetailFragment(it[position])
-                    findNavController().navigate(action)
-                }
+        subscribeObservers()
+        prepareRecyclerView()
+    }
+
+    private fun prepareRecyclerView() {
+        binding.recyclerViewLocations.adapter = placeRecyclerAdapter
+        binding.recyclerViewLocations.addItemDecoration(
+            (
+                DividerItemDecoration(
+                    requireContext(),
+                    DividerItemDecoration.VERTICAL
+                )
+                )
+        )
+        placeRecyclerAdapter.setOnItemClickListener { position ->
+            viewModel.uiState.value.placeList?.let {
+                val action = HomeFragmentDirections.actionFragmentHomeToFragmentDetail(it[position])
+                findNavController().navigate(action)
             }
-            if (!viewModel.uiState.value.placesLoaded) {
-                viewModel.fetchPlaces()
-            }
-        } else {
-            findNavController().navigate(R.id.action_home_to_login)
         }
     }
 
@@ -60,14 +57,18 @@ class HomeFragment :
             uiState.errorMessage?.let {
                 showErrorMessage(it)
                 viewModel.userMessageShown()
-            }
-            if (uiState.placesLoaded) {
-                placeRecyclerAdapter.submitList(uiState.placeList)
-            }
-            if (uiState.signOutSuccess) {
-                findNavController().navigate(R.id.action_home_to_login)
+            } ?: run {
+                if (uiState.placesLoaded) {
+                    placeRecyclerAdapter.submitList(uiState.placeList)
+                } else if (uiState.signOutSuccess) {
+                    navigateToLogin()
+                }
             }
         }
+    }
+
+    private fun navigateToLogin() {
+        findNavController().navigate(R.id.action_fragmentHome_to_login_navigation)
     }
 
     @SuppressLint("RestrictedApi")
@@ -84,10 +85,5 @@ class HomeFragment :
             viewModel.signOut()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroyView() {
-        binding.recyclerViewLocations.adapter = null
-        super.onDestroyView()
     }
 }

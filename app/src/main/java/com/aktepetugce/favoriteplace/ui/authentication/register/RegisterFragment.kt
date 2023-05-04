@@ -2,14 +2,17 @@ package com.aktepetugce.favoriteplace.ui.authentication.register
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
+import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
+import com.aktepetugce.favoriteplace.common.extension.onClick
 import com.aktepetugce.favoriteplace.databinding.FragmentRegisterBinding
-import com.aktepetugce.favoriteplace.util.extension.launchAndCollectIn
-import com.aktepetugce.favoriteplace.util.extension.onClick
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +34,9 @@ class RegisterFragment :
                     hideKeyboard()
                 }
             }
+            textViewLogin.setOnClickListener {
+                findNavController().navigate(R.id.action_fragmentRegister_to_fragmentLogin)
+            }
         }
         subscribeObservers()
     }
@@ -42,11 +48,27 @@ class RegisterFragment :
                 uiState.errorMessage?.let {
                     showErrorMessage(it)
                     viewModel.userMessageShown()
-                }
-                uiState.nextDestination?.let { nextPage ->
-                    findNavController().navigate(nextPage)
+                } ?: run {
+                    if (uiState.success) {
+                        navigateToHome()
+                    }
                 }
             }
         }
+    }
+    private fun navigateToHome() {
+        val deepLinkUri = NavDeepLinkRequest.Builder
+            .fromUri("android-app:/com.aktepetugce.favoriteplace/home_fragment".toUri())
+            .build()
+        findNavController().navigate(
+            deepLinkUri,
+            navOptions { // Use the Kotlin DSL for building NavOptions
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+                popUpTo(R.id.fragmentRegister) { inclusive = true }
+            }
+        )
     }
 }

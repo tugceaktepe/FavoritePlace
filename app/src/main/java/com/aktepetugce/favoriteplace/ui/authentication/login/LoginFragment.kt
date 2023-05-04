@@ -7,9 +7,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
+import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
+import com.aktepetugce.favoriteplace.common.extension.onClick
 import com.aktepetugce.favoriteplace.databinding.FragmentLoginBinding
-import com.aktepetugce.favoriteplace.util.extension.launchAndCollectIn
-import com.aktepetugce.favoriteplace.util.extension.onClick
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,8 +18,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initListeners()
+        subscribeObservers()
+    }
+
+    private fun initListeners() {
         with(binding) {
             buttonSignIn.onClick {
+                // TODO: add validations
                 if (editTextEmail.text.isNullOrEmpty() || editTextPassword.text.isNullOrEmpty()) {
                     showErrorMessage(getString(R.string.email_or_password_empty_error))
                 } else {
@@ -30,11 +37,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     hideKeyboard()
                 }
             }
-            textViewSignUpTextTwo.onClick {
-                findNavController().navigate(R.id.action_login_to_register)
+            textViewSignUp.onClick {
+                findNavController().navigate(R.id.fragmentRegister)
             }
         }
-        subscribeObservers()
     }
 
     private fun subscribeObservers() {
@@ -44,9 +50,29 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 showErrorMessage(it)
                 viewModel.userMessageShown()
             }
-            uiState.nextDestination?.let { nextPage ->
-                findNavController().navigate(nextPage)
+            if (uiState.isUserAuthenticated) {
+                findNavController().navigate(R.id.action_fragmentLogin_to_home_navigation)
+            }
+            if (uiState.isLoginSuccess) {
+                navigateToHome()
             }
         }
+    }
+
+    private fun navigateToHome() {
+        /*val deepLinkUri = NavDeepLinkRequest.Builder
+            .fromUri("android-app:/com.aktepetugce.favoriteplace/home_fragment".toUri())
+            .build()
+        findNavController().navigate(
+            deepLinkUri,
+            navOptions { // Use the Kotlin DSL for building NavOptions
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+                popUpTo(R.id.fragmentRegister) { inclusive = true }
+            }
+        )*/
+        findNavController().navigate(R.id.action_fragmentLogin_to_home_navigation)
     }
 }

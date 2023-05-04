@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.util.extension
+package com.aktepetugce.favoriteplace.common.extension
 
 import android.os.SystemClock
 import android.view.View

@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/home"
+        android:id="@id/home_navigation"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/home_title" />
 
     <item
-        android:id="@+id/add_location"
+        android:id="@id/add_location_navigation"
         android:icon="@drawable/ic_baseline_add_location_alt_24"
         android:title="@string/add_location_title" />
 

@@ -1,6 +1,6 @@
 package com.aktepetugce.favoriteplace.data.repo
 
-import com.aktepetugce.favoriteplace.util.Response
+import com.aktepetugce.favoriteplace.common.model.Response
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch

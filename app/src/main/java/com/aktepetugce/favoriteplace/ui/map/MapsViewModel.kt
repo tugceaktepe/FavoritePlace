@@ -2,10 +2,9 @@ package com.aktepetugce.favoriteplace.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aktepetugce.favoriteplace.R
+import com.aktepetugce.favoriteplace.common.model.Response
 import com.aktepetugce.favoriteplace.domain.model.UIPlace
 import com.aktepetugce.favoriteplace.domain.usecase.place.PlaceUseCases
-import com.aktepetugce.favoriteplace.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -69,7 +68,7 @@ class MapsViewModel @Inject constructor(
             when (response) {
                 is Response.Success<*> -> {
                     _uiState.update { currentState ->
-                        currentState.copy(nextDestination = R.id.action_maps_to_home, isLoading = false)
+                        currentState.copy(success = true, isLoading = false)
                     }
                 }
                 is Response.Error -> {

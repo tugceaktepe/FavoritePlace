@@ -1,10 +1,10 @@
 package com.aktepetugce.favoriteplace.domain.usecase.place
 
+import com.aktepetugce.favoriteplace.common.model.Response
 import com.aktepetugce.favoriteplace.data.model.Place
 import com.aktepetugce.favoriteplace.data.repo.PlaceRepository
 import com.aktepetugce.favoriteplace.domain.mapper.PlaceMapper
 import com.aktepetugce.favoriteplace.domain.model.UIPlace
-import com.aktepetugce.favoriteplace.util.Response
 import kotlinx.coroutines.flow.flow
 
 class FetchPlaces(

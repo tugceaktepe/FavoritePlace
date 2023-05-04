@@ -1,8 +1,8 @@
 package com.aktepetugce.favoriteplace.data.repo
 
 import android.net.Uri
+import com.aktepetugce.favoriteplace.common.model.Response
 import com.aktepetugce.favoriteplace.data.model.Place
-import com.aktepetugce.favoriteplace.util.Response
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference

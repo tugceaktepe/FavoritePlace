@@ -2,10 +2,10 @@ package com.aktepetugce.favoriteplace.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aktepetugce.favoriteplace.common.model.Response
 import com.aktepetugce.favoriteplace.domain.model.UIPlace
 import com.aktepetugce.favoriteplace.domain.usecase.authentication.AuthUseCases
 import com.aktepetugce.favoriteplace.domain.usecase.place.PlaceUseCases
-import com.aktepetugce.favoriteplace.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,15 +21,6 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(HomeViewState())
     val uiState: StateFlow<HomeViewState> = _uiState
-
-    init {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isUserAuthenticated = authUseCases.isUserAuthenticated.invoke(),
-                email = authUseCases.currentUserEmail.invoke()
-            )
-        }
-    }
 
     fun signOut() = viewModelScope.launch {
         authUseCases.signOut().collect { response ->
@@ -54,7 +45,6 @@ class HomeViewModel @Inject constructor(
     private fun clearSession() {
         _uiState.update { currentState ->
             currentState.copy(
-                isUserAuthenticated = false,
                 placeList = listOf(),
                 errorMessage = null,
                 isLoading = false,
@@ -65,7 +55,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fetchPlaces() = viewModelScope.launch {
-        placeUseCases.fetchPlaces(uiState.value.email).collect { response ->
+        val email = authUseCases.currentUserEmail.invoke()
+        placeUseCases.fetchPlaces(email).collect { response ->
             when (response) {
                 is Response.Success<*> -> {
                     _uiState.update { currentState ->

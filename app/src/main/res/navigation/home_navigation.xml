@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_navigation"
+    app:startDestination="@id/fragmentHome">
+
+    <fragment
+        android:id="@+id/fragmentHome"
+        android:name="com.aktepetugce.favoriteplace.ui.home.HomeFragment"
+        android:label="@string/home_title"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentDetail"
+            app:destination="@id/fragmentDetail" />
+        <action
+            android:id="@+id/action_fragmentHome_to_login_navigation"
+            app:destination="@id/fragmentLogin"
+            app:popUpTo="@id/fragmentHome"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentDetail"
+        android:name="com.aktepetugce.favoriteplace.ui.detail.DetailFragment"
+        android:label="@string/location_info_title"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="place"
+            app:argType="com.aktepetugce.favoriteplace.domain.model.UIPlace"
+            app:nullable="true" />
+    </fragment>
+</navigation>

@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.util
+package com.aktepetugce.favoriteplace.common.model
 
 sealed class Response<out T> {
     object Loading : Response<Nothing>()

@@ -1,5 +1,6 @@
 package com.aktepetugce.favoriteplace.di
 
+import com.aktepetugce.favoriteplace.common.annotation.IoDispatcher
 import com.aktepetugce.favoriteplace.data.repo.AuthRepository
 import com.aktepetugce.favoriteplace.data.repo.AuthRepositoryImpl
 import com.aktepetugce.favoriteplace.data.repo.PlaceRepository
@@ -16,7 +17,6 @@ import com.aktepetugce.favoriteplace.domain.usecase.place.FetchPlaces
 import com.aktepetugce.favoriteplace.domain.usecase.place.PlaceUseCases
 import com.aktepetugce.favoriteplace.domain.usecase.place.SavePlaceDetail
 import com.aktepetugce.favoriteplace.domain.usecase.place.SavePlaceImage
-import com.aktepetugce.favoriteplace.util.annotation.IoDispatcher
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase

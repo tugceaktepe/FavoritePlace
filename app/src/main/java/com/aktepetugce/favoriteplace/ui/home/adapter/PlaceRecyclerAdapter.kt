@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aktepetugce.favoriteplace.common.extension.onClick
 import com.aktepetugce.favoriteplace.databinding.ItemPlaceRowBinding
 import com.aktepetugce.favoriteplace.di.GlideApp
 import com.aktepetugce.favoriteplace.domain.model.UIPlace
-import com.aktepetugce.favoriteplace.util.extension.onClick
 
 class PlaceRecyclerAdapter : ListAdapter<UIPlace, PlaceRecyclerAdapter.PlaceViewHolder>(PlaceDiffCallBack()) {
 

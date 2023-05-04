@@ -1,7 +1,7 @@
 package com.aktepetugce.favoriteplace.ui.map
 
 data class MapsViewState(
-    val nextDestination: Int? = null,
+    val success: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )

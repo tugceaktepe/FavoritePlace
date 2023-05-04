@@ -15,15 +15,18 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
+import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.databinding.FragmentMapsBinding
 import com.aktepetugce.favoriteplace.domain.model.UIPlace
-import com.aktepetugce.favoriteplace.util.extension.launchAndCollectIn
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -80,9 +83,10 @@ class MapsFragment :
             uiState.errorMessage?.let {
                 showErrorMessage(it)
                 viewModel.userMessageShown()
-            }
-            uiState.nextDestination?.let { nextPage ->
-                findNavController().navigate(nextPage)
+            } ?: run {
+                if (uiState.success) {
+                    navigateToHome()
+                }
             }
         }
     }
@@ -149,6 +153,22 @@ class MapsFragment :
         latitude = latLng.latitude
         mGoogleMap.addMarker(MarkerOptions().title(getString(R.string.map_marker_title)).position(latLng))
         Toast.makeText(requireContext(), getString(R.string.save_location_info), Toast.LENGTH_LONG).show()
+    }
+
+    private fun navigateToHome() {
+        val deepLinkUri = NavDeepLinkRequest.Builder
+            .fromUri("android-app:/com.aktepetugce.favoriteplace/home_fragment".toUri())
+            .build()
+        findNavController().navigate(
+            deepLinkUri,
+            navOptions { // Use the Kotlin DSL for building NavOptions
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+                popUpTo(R.id.fragmentRegister) { inclusive = true }
+            }
+        )
     }
 
     override fun onDestroyView() {

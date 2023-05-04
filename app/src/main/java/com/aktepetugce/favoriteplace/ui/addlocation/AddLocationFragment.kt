@@ -13,9 +13,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
+import com.aktepetugce.favoriteplace.common.extension.onClick
 import com.aktepetugce.favoriteplace.databinding.FragmentAddLocationBinding
 import com.aktepetugce.favoriteplace.domain.model.UIPlace
-import com.aktepetugce.favoriteplace.util.extension.onClick
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,7 +53,7 @@ class AddLocationFragment : BaseFragment<FragmentAddLocationBinding>(FragmentAdd
                         placeLongitude = 0.0
                     )
                     val action =
-                        AddLocationFragmentDirections.actionAddLocationToMapsFragment(
+                        AddLocationFragmentDirections.actionFragmentAddLocationToFragmentMaps(
                             uiPlace
                         )
                     hideKeyboard()

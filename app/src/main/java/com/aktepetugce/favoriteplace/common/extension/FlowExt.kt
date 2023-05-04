@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.util.extension
+package com.aktepetugce.favoriteplace.common.extension
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner

@@ -7,9 +7,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
@@ -68,7 +71,15 @@ class HomeFragment :
     }
 
     private fun navigateToLogin() {
-        findNavController().navigate(R.id.action_fragmentHome_to_login_navigation)
+        val deepLinkUri = NavDeepLinkRequest.Builder
+            .fromUri("android-app:/com.aktepetugce.favoriteplace/authentication/login".toUri())
+            .build()
+        findNavController().navigate(
+            deepLinkUri,
+            navOptions {
+                popUpTo(R.id.fragmentHome) { inclusive = true }
+            }
+        )
     }
 
     @SuppressLint("RestrictedApi")

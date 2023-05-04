@@ -13,12 +13,9 @@
         <action
             android:id="@+id/action_fragmentHome_to_fragmentDetail"
             app:destination="@id/fragmentDetail" />
-        <action
-            android:id="@+id/action_fragmentHome_to_login_navigation"
-            app:destination="@id/fragmentLogin"
-            app:popUpTo="@id/fragmentHome"
-            app:popUpToInclusive="true"
-            />
+        <deepLink
+            android:id="@+id/deepLinkHome"
+            app:uri="android-app:/com.aktepetugce.favoriteplace/home" />
     </fragment>
 
     <fragment

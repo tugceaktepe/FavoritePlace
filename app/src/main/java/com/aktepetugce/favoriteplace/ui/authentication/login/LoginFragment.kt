@@ -2,9 +2,12 @@ package com.aktepetugce.favoriteplace.ui.authentication.login
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.base.BaseFragment
 import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
@@ -27,7 +30,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         with(binding) {
             buttonSignIn.onClick {
                 // TODO: add validations
-                if (editTextEmail.text.isNullOrEmpty() || editTextPassword.text.isNullOrEmpty()) {
+                /*if (editTextEmail.text.isNullOrEmpty() || editTextPassword.text.isNullOrEmpty()) {
                     showErrorMessage(getString(R.string.email_or_password_empty_error))
                 } else {
                     viewModel.signIn(
@@ -35,7 +38,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         binding.editTextPassword.text.toString()
                     )
                     hideKeyboard()
-                }
+                }*/
+                viewModel.signIn(
+                    "tugce@mail.com",
+                    "123456"
+                )
+                hideKeyboard()
             }
             textViewSignUp.onClick {
                 findNavController().navigate(R.id.fragmentRegister)
@@ -60,19 +68,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun navigateToHome() {
-        /*val deepLinkUri = NavDeepLinkRequest.Builder
-            .fromUri("android-app:/com.aktepetugce.favoriteplace/home_fragment".toUri())
+        val deepLinkUri = NavDeepLinkRequest.Builder
+            .fromUri("android-app:/com.aktepetugce.favoriteplace/home".toUri())
             .build()
         findNavController().navigate(
             deepLinkUri,
-            navOptions { // Use the Kotlin DSL for building NavOptions
-                anim {
-                    enter = android.R.animator.fade_in
-                    exit = android.R.animator.fade_out
-                }
-                popUpTo(R.id.fragmentRegister) { inclusive = true }
+            navOptions {
+                popUpTo(R.id.fragmentLogin) { inclusive = true }
             }
-        )*/
-        findNavController().navigate(R.id.action_fragmentLogin_to_home_navigation)
+        )
     }
 }

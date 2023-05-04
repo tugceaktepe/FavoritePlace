@@ -34,7 +34,9 @@
             app:destination="@id/home_navigation"
             app:popUpTo="@id/fragmentLogin"
             app:popUpToInclusive="true"/>
-
+        <deepLink
+            android:id="@+id/deepLinkHome"
+            app:uri="android-app:/com.aktepetugce.favoriteplace/authentication/login" />
     </fragment>
     <fragment
         android:id="@+id/fragmentRegister"

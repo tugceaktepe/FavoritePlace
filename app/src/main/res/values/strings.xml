@@ -1,25 +1,4 @@
 <resources>
     <string name="app_name">FavoritePlace</string>
     <string name="home_title">FavoritePlace</string>
-    <string name="add_location_title">Add Location</string>
-    <string name="set_location_title">Set Location</string>
-    <string name="location_info_title">Location Info</string>
-    <string name="forgot_password_title">Forgot Password</string>
-    <string name="register_title">Sign Up</string>
-    <string name="sign_up">SIGN UP</string>
-    <string name="sign_in">SIGN IN</string>
-    <string name="enter_password">Enter Password</string>
-    <string name="enter_email">Enter Email</string>
-    <string name="welcome_text">Welcome to FavoritePlace App! 😊</string>
-    <string name="sign_up_text">You need an account?</string>
-    <string name="sign_up_text_2">Sign Up! 🤩</string>
-    <string name="email_or_password_empty_error">Email or password can not be empty!</string>
-    <string name="name_or_type_empty_error">Name or Type cannot be empty!</string>
-    <string name="log_out">Log out</string>
-    <string name="name">name</string>
-    <string name="type">type</string>
-    <string name="atmosphere">atmosphere</string>
-    <string name="map_marker_title">New Place</string>
-    <string name="save_location_info">Click On Save</string>
-    <string name="next">Next</string>
 </resources>

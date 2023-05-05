@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.App.Starting">
+        android:theme="@style/Theme.FavoritePlace">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_KEY" />
@@ -25,23 +25,24 @@
             android:name=".ui.MainActivity"
             android:exported="true">
             <tools:validation testUrl="https://tugceaktepe.github.io/favoriteplace" />
+            <nav-graph android:value="@navigation/app_navigation" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
-            <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW" />
 
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-            <data
-                android:host="tugceaktepe.github.io"
-                android:pathPattern="/favoriteplace"
-                android:scheme="https" />
-        </intent-filter>
-    </activity>
-</application>
+                <data
+                    android:host="tugceaktepe.github.io"
+                    android:pathPattern="/favoriteplace"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+    </application>
 
-    </manifest>
+</manifest>

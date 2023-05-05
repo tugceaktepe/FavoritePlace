@@ -1,24 +1,21 @@
 plugins {
     alias libs.plugins.android.plugin
     alias libs.plugins.kotlin.android
-    alias libs.plugins.kotlin.kapt
-    alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.kotlin.serialization
-    alias libs.plugins.hilt.plugin
-    alias libs.plugins.safe.args
+    alias libs.plugins.detekt
     alias libs.plugins.firebase.crashlitycs
     alias libs.plugins.maps.platform.secrets
     alias libs.plugins.gms.google.services
-    alias libs.plugins.detekt
+    alias libs.plugins.kotlin.kapt
+    alias libs.plugins.hilt.plugin
 }
 
 android {
-    compileSdk 33
+    compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.aktepetugce.favoriteplace"
-        minSdk 21
-        targetSdk 33
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -51,38 +48,18 @@ detekt {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.constraint.layout)
-    implementation(libs.material)
-
-    implementation(libs.bundles.navigation)
-    implementation(libs.bundles.androidx.lifecycle)
-
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.coroutines.playservices)
-    implementation(libs.play.services.maps)
+    implementation project(":features:login")
+    implementation project(":features:location")
+    implementation project(":features:home")
 
     implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
-
-    implementation(libs.glide.android)
-    kapt(libs.glide.compiler)
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
 
     implementation platform(libs.firebase.bom)
     implementation(libs.firebase.analytics.ktx)
     implementation(libs.firebase.crashlytics.ktx)
-    implementation(libs.firebase.database.ktx)
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.firebase.storage)
 
-    implementation(libs.splash.screen)
-
-    debugImplementation(libs.leak.canary)
-
-    detektPlugins(libs.detekt.formatting)
-
-    testImplementation(libs.testing.junit)
-    androidTestImplementation(libs.testing.androidx.junit)
-    androidTestImplementation(libs.testing.espresso.core)
+    kapt(libs.dagger.hilt.compiler)
 }

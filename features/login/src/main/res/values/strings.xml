@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forgot_password_title">Forgot Password</string>
+    <string name="register_title">Sign Up</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="welcome_text">Welcome to FavoritePlace App! 😊</string>
+    <string name="sign_up_text">Do you need an account? <font color="#097ECC">Sign Up! 🤩</font> </string>
+    <string name="sign_in_text">Already have an account?</string>
+    <string name="email_or_password_empty_error">Email or password can not be empty!</string>
+</resources>

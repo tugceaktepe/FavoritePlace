@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
@@ -14,9 +15,14 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.aktepetugce.favoriteplace.R
-import com.aktepetugce.favoriteplace.common.util.gone
-import com.aktepetugce.favoriteplace.common.util.visible
 import com.aktepetugce.favoriteplace.databinding.ActivityMainBinding
+import com.aktepetugce.favoriteplace.home.R.id.fragmentHome
+import com.aktepetugce.favoriteplace.location.R.id.fragmentAddLocation
+import com.aktepetugce.favoriteplace.location.R.id.fragmentMaps
+import com.aktepetugce.favoriteplace.login.R.id.fragmentForgotPassword
+import com.aktepetugce.favoriteplace.login.R.id.fragmentLogin
+import com.aktepetugce.favoriteplace.login.R.id.fragmentRegister
+import com.aktepetugce.favoriteplace.login.R.id.fragmentSplash
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,11 +41,11 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
         setSupportActionBar(toolbar)
         appBarConfiguration = AppBarConfiguration
             .Builder(
-                R.id.fragmentSplash,
-                R.id.fragmentLogin,
-                R.id.fragmentRegister,
-                R.id.fragmentHome,
-                R.id.fragmentAddLocation
+                fragmentSplash,
+                fragmentLogin,
+                fragmentRegister,
+                fragmentHome,
+                fragmentAddLocation
             )
             .build()
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -62,12 +68,12 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
 
     private fun manageBottomNavigation(destinationId: Int) {
         when (destinationId) {
-            R.id.fragmentSplash,
-            R.id.fragmentLogin,
-            R.id.fragmentRegister,
-            R.id.fragmentForgotPassword,
-            R.id.fragmentMaps,
-            R.id.fragmentAddLocation -> {
+            fragmentSplash,
+            fragmentLogin,
+            fragmentRegister,
+            fragmentForgotPassword,
+            fragmentMaps,
+            fragmentAddLocation -> {
                 hideBottomNav()
             }
 
@@ -79,10 +85,10 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
 
     private fun manageActionBar(destinationId: Int) {
         when (destinationId) {
-            R.id.fragmentSplash,
-            R.id.fragmentLogin,
-            R.id.fragmentRegister,
-            R.id.fragmentForgotPassword -> {
+            fragmentSplash,
+            fragmentLogin,
+            fragmentRegister,
+            fragmentForgotPassword -> {
                 hideActionBar()
             }
 
@@ -93,19 +99,19 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
     }
 
     private fun showBottomNav() {
-        binding.bottomNavigationView.visible()
+        binding.bottomNavigationView.isVisible = true
     }
 
     private fun hideBottomNav() {
-        binding.bottomNavigationView.gone()
+        binding.bottomNavigationView.isVisible = false
     }
 
     private fun showActionBar() {
-        binding.toolbar.visible()
+        binding.toolbar.isVisible = true
     }
 
     private fun hideActionBar() {
-        binding.toolbar.gone()
+        binding.toolbar.isVisible = true
     }
 
     override fun onNewIntent(intent: Intent?) {

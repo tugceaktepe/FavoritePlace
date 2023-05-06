@@ -57,7 +57,8 @@ class AddLocationFragment : com.aktepetugce.favoriteplace.common.base.BaseFragme
                     val action =
                         AddLocationFragmentDirections.actionFragmentAddLocationToFragmentMaps(
                             uiPlace,
-                            uri.toString()
+                            uri.toString(),
+                            findNavController().previousBackStackEntry?.destination?.id ?: -1
                         )
                     hideKeyboard()
                     findNavController().navigate(action)

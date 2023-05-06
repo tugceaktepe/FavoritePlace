@@ -27,5 +27,8 @@
         <argument
             android:name="uri"
             app:argType="string" />
+        <argument
+            android:name="homeDestinationId"
+            app:argType="integer"/>
     </fragment>
 </navigation>

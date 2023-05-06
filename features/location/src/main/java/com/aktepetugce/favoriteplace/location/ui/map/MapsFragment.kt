@@ -165,7 +165,7 @@ class MapsFragment :
         findNavController().navigate(
             deepLinkUri,
             navOptions {
-                popUpTo(R.id.fragmentAddLocation) { inclusive = true }
+                popUpTo(args.homeDestinationId) { inclusive = true }
             }
         )
     }

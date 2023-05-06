@@ -1,21 +1,25 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
+
 }
-rootProject.name = "FavoritePlace"
-include ':app'
-include ':features:home'
-include ':common'
-include ':features:login'
-include ':features:login'
-include ':features:location'
+
+rootProject.name = "plugins"
+include(":convention")
+include(":verification")

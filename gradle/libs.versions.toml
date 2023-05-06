@@ -1,72 +1,96 @@
 [versions]
-kotlin = "1.7.0"
-android-plugin = "7.3.0"
-gms-plugin = "4.3.12"
-hilt ="2.42"
-maps-platform-secrets = "2.0.0"
-androidx-core = "1.7.0"
-androidx-appcompat = "1.4.2"
-material = "1.6.1"
+androidGradlePlugin = "8.0.0"
+androidxActivity = "1.7.0"
+androidxAppCompat = "1.5.1"
+androidxCore = "1.9.0"
+androidxEspresso = "3.5.0"
+androidxLifecycle = "2.6.0-alpha05"
+androidxNavigation = "2.5.3"
+androidxJunit = "1.1.3"
+androidxTestCore = "1.5.0"
 constraint-layout="2.1.4"
-androidx-lifecycle = "2.4.1"
-navigation = "2.4.2"
-firebase-bom = "30.3.1"
-firebase-crashlytics-gradle = "2.9.1"
-gms-google-services = "4.3.13"
-kotlinx-serialization = "1.2.2"
-kotlinx-coroutines= "1.6.4"
-play-services-map = "18.1.0"
-glide = "4.11.0"
-testing-junit = "4.13.2"
-testing-androidx-junit = "1.1.3"
-testing-espresso-core = "3.4.0"
-leak-canary="2.9.1"
-splash-screen= "1.0.0-beta02"
 detekt = "1.22.0"
-
-[plugins]
-android-plugin = { id = "com.android.application", version.ref = "android-plugin"}
-android-library = { id = "com.android.library", version.ref = "android-plugin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-safe-args = {id = "androidx.navigation.safeargs.kotlin" , version.ref = "navigation"}
-firebase-crashlitycs = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradle"}
-gms-google-services = { id = "com.google.gms.google-services", version.ref = "gms-google-services"}
-maps-platform-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "maps-platform-secrets"}
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+firebaseBom = "31.2.0"
+firebaseCrashlyticsPlugin = "2.9.2"
+firebasePerfPlugin = "1.4.2"
+gmsPlugin = "4.3.14"
+glide = "4.14.2"
+hilt = "2.44.2"
+hiltExt = "1.0.0"
+junit4 = "4.13.2"
+jacoco = "0.8.7"
+kotlin = "1.8.20"
+kotlinxCoroutines = "1.6.4"
+kotlinxSerializationJson = "1.5.0"
+ksp = "1.8.20-1.0.11"
+material = "1.6.1"
+okhttp = "4.10.0"
+playServicesMap = "18.1.0"
+retrofit = "2.9.0"
+secrets = "2.0.1"
+testingJunit = "4.13.2"
+androidxTestExt = "1.1.4"
 
 [libraries]
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core"}
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat"}
-material = { module = "com.google.android.material:material", version.ref = "material"}
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
+androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "androidxNavigation" }
+androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidxNavigation"}
+androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidxNavigation"}
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspresso" }
+androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidxTestExt" }
+testing-junit = { module = "junit:junit", version.ref = "testingJunit"}
+testing-androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidxJunit"}
 constraint-layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint-layout"}
-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle"}
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle"}
-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation"}
-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation"}
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-kotlinx-coroutines-playservices = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
-play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-map" }
-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt"}
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+firebase-performance-gradle = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
+firebase-database= { module = "com.google.firebase:firebase-database-ktx" }
+firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
+firebase-storage= { module = "com.google.firebase:firebase-storage-ktx"}
 glide-android = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx" }
-firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx" }
-firebase-database-ktx = { module = "com.google.firebase:firebase-database-ktx" }
-firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
-firebase-storage= { module = "com.google.firebase:firebase-storage-ktx"}
-testing-junit = { module = "junit:junit", version.ref = "testing-junit"}
-testing-androidx-junit = { module = "androidx.test.ext:junit", version.ref = "testing-androidx-junit"}
-testing-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "testing-espresso-core"}
-leak-canary = {module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leak-canary"}
-splash-screen = {module = "androidx.core:core-splashscreen", version.ref="splash-screen"}
-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt"}
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+material = { module = "com.google.android.material:material", version.ref = "material"}
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMap" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+
+# Dependencies of the included build-logic
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+plugin-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerfPlugin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+gms = { id = "com.google.gms.google-services", version.ref = "gmsPlugin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+safe-args = {id = "androidx.navigation.safeargs.kotlin" , version.ref = "androidxNavigation"}
+secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
 [bundles]
-navigation = [ "navigation-ui-ktx", "navigation-fragment-ktx" ]
-androidx-lifecycle = [ "lifecycle-livedata-ktx", "lifecycle-viewmodel-ktx" ]
+navigation = [ "androidx-navigation-ui-ktx", "androidx-navigation-fragment-ktx" ]

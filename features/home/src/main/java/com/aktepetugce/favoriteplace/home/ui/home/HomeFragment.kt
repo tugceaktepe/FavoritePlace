@@ -32,12 +32,7 @@ class HomeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // dummy solution , it will be refactored as possible as
-        if (findNavController().previousBackStackEntry?.destination?.id
-            == findNavController().currentBackStackEntry?.destination?.id
-        ) {
-            findNavController().popBackStack()
-        }
+        viewModel.fetchPlaces()
         subscribeObservers()
         prepareRecyclerView()
     }

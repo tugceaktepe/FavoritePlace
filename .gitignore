@@ -15,3 +15,6 @@
 local.properties
 /.idea/
 /app/google-services.json
+/plugins/verification/build/
+/plugins/convention/build/
+/plugins/build/

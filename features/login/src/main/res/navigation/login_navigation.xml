@@ -44,11 +44,6 @@
         android:label="RegisterFragment"
         tools:layout="@layout/fragment_register">
         <action
-            android:id="@+id/action_fragmentRegister_to_home_navigation"
-            app:destination="@id/home_navigation"
-            app:popUpTo="@id/fragmentRegister"
-            app:popUpToInclusive="true"/>
-        <action
             android:id="@+id/action_fragmentRegister_to_fragmentLogin"
             app:destination="@id/fragmentLogin" />
     </fragment>
@@ -57,5 +52,4 @@
         android:name="com.aktepetugce.favoriteplace.login.ui.forgotpassword.ForgotPasswordFragment"
         android:label="fragment_forgot_password"
         tools:layout="@layout/fragment_forgot_password" />
-    <include app:graph="@navigation/home_navigation" />
 </navigation>

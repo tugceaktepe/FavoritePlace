@@ -57,7 +57,7 @@ class LoginFragment : com.aktepetugce.favoriteplace.common.base.BaseFragment<Fra
                 viewModel.userMessageShown()
             }
             if (uiState.isUserAuthenticated) {
-                findNavController().navigate(R.id.action_fragmentLogin_to_home_navigation)
+                navigateToHome()
             }
             if (uiState.isLoginSuccess) {
                 navigateToHome()

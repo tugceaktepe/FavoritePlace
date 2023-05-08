@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/fragmentHome"
         android:name="com.aktepetugce.favoriteplace.home.ui.home.HomeFragment"
-        android:label="@string/home_title"
+        android:label="@string/app_title"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_fragmentHome_to_fragmentDetail"

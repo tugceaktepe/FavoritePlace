@@ -41,7 +41,7 @@ class DetailFragment :
         place?.let { place ->
             with(binding) {
                 textViewName.text = place.name
-                typeTextView.text = place.type
+                //typeTextView.text = place.type
                 GlideApp.with(requireContext())
                     .load(place.imageUrl)
                     .into(imageViewPlace)

@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.location.domain
+package com.aktepetugce.favoriteplace.location.domain.usecase
 
 import android.net.Uri
 import com.aktepetugce.favoriteplace.common.data.repo.PlaceRepository

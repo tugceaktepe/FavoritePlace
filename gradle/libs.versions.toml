@@ -53,6 +53,7 @@ firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 firebase-performance-gradle = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
 firebase-database= { module = "com.google.firebase:firebase-database-ktx" }
+firebase-firestore={ module = "com.google.firebase:firebase-firestore-ktx"}
 firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
 firebase-storage= { module = "com.google.firebase:firebase-storage-ktx"}
 glide-android = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }

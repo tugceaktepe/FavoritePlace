@@ -1,6 +1,6 @@
 package com.aktepetugce.favoriteplace.home.ui.home
 
-import com.aktepetugce.favoriteplace.common.data.model.Place
+import com.aktepetugce.favoriteplace.common.domain.model.Place
 
 data class HomeViewState(
     val placeList: List<Place>? = listOf(),

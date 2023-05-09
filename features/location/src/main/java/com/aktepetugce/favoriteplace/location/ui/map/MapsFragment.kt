@@ -23,8 +23,9 @@ import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
+import com.aktepetugce.favoriteplace.common.R.drawable.ic_launcher_background
 import com.aktepetugce.favoriteplace.common.base.BaseFragment
-import com.aktepetugce.favoriteplace.common.data.model.Place
+import com.aktepetugce.favoriteplace.common.domain.model.Place
 import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.location.R
 import com.aktepetugce.favoriteplace.location.databinding.FragmentMapsBinding
@@ -50,7 +51,7 @@ class MapsFragment :
 
     private var latitude = 0.0
     private var longitude = 0.0
-    private lateinit var mUIPlace: Place
+    private lateinit var name: String
     private lateinit var uri: Uri
 
     private val locationListener = LocationListener { location ->
@@ -65,10 +66,9 @@ class MapsFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val place = args.place
-        place?.let {
-            mUIPlace = it
-            uri = Uri.parse(args.uri)
+        args.let {
+            name = it.args.name
+            uri = Uri.parse(it.args.uri)
         }
     }
 
@@ -104,9 +104,18 @@ class MapsFragment :
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save_location) {
-            mUIPlace.latitude = latitude.toString()
-            mUIPlace.longitude = longitude.toString()
-            viewModel.savePlace(mUIPlace, uri)
+            //TODO: move this logic to viewmodel
+            val place = Place(
+                name = name,
+                latitude = latitude,
+                longitude = longitude,
+                description = "",
+                feeling = Pair(2, ic_launcher_background),
+                id = "",
+                instanceId = 0,
+                imageUrl = ""
+            )
+            viewModel.savePlace(place, uri)
         }
         return super.onOptionsItemSelected(item)
     }

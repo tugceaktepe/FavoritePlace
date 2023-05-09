@@ -1,7 +1,7 @@
 package com.aktepetugce.favoriteplace.common.di
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import dagger.Module
@@ -13,14 +13,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class FirebaseModule {
-
     @Provides
     @Singleton
-    fun provideFirebaseDatabase(): FirebaseDatabase = FirebaseDatabase.getInstance()
-
-    @Provides
-    @Singleton
-    fun provideFirebaseDatabaseReference(firebaseDatabase: FirebaseDatabase) = firebaseDatabase.reference
+    fun provideFirestore() = FirebaseFirestore.getInstance()
 
     @Provides
     @Singleton

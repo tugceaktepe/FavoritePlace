@@ -2,8 +2,8 @@ package com.aktepetugce.favoriteplace.home.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aktepetugce.favoriteplace.common.data.model.Place
-import com.aktepetugce.favoriteplace.common.domain.usecases.GetCurrentUserEmail
+import com.aktepetugce.favoriteplace.common.domain.model.Place
+import com.aktepetugce.favoriteplace.common.domain.usecase.GetCurrentUserEmail
 import com.aktepetugce.favoriteplace.common.model.Response
 import com.aktepetugce.favoriteplace.home.domain.usecases.FetchPlaces
 import com.aktepetugce.favoriteplace.home.domain.usecases.SignOut

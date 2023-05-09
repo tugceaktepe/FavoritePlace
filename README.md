@@ -1,30 +1,12 @@
 # FavoritePlace
 
-FavoritePlace is simple Foursquare clone app. It collects location data from user, and stores Firebase Realtime Database. 
+FavoritePlace is simple Foursquare clone app. It collects location data from user, and stores Firebase FireStore database.
 
 ## Architecture
 
 I'm trying to follow clean architecture principles and MVVM architecture. The folder structure is as follows : 
 
-### Base
-Base package includes base classes that used throughout the application
- 
-
-### Data
-Data package includes data model and firebase repository classes.
-
-
-### DI
-DI package includes components for dependency injection.
-
-### Domain
-Domain package includes logical operations such as mapping and usecases.
-
-### UI
-UI package includes Application, Activity, Fragment, ViewModel and related classes like a ReyclerViewAdapter.
-
-### Util
-Util package includes Response model for UI states. E.g. ```sealed class Response<out T> ```
+* Architecture explanation will be updated soon. 
 
 ## How to Setup?
 * Setup project on Firebase Console.
@@ -36,7 +18,7 @@ Util package includes Response model for UI states. E.g. ```sealed class Respons
 
 ## Technology
 
-* Firebase Realtime Database
+* Firebase Firestore
 * Firebase Authentication
 * Firebase Storage
 * Google Maps
@@ -45,6 +27,8 @@ Util package includes Response model for UI states. E.g. ```sealed class Respons
 * Navigation Component
 * Hilt
 * Kotlin Flow, Coroutines
+* Version Catalog 
+* Kotlin DSL
 
 ## TODOs and Improvements
 * Fix of Performance Issues

@@ -2,8 +2,8 @@ package com.aktepetugce.favoriteplace.home.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aktepetugce.favoriteplace.common.data.model.Place
-import com.aktepetugce.favoriteplace.common.domain.usecases.GetCurrentUserEmail
+import com.aktepetugce.favoriteplace.common.domain.model.Place
+import com.aktepetugce.favoriteplace.common.domain.usecase.GetCurrentUserEmail
 import com.aktepetugce.favoriteplace.common.model.Response
 import com.aktepetugce.favoriteplace.home.domain.usecases.FetchPlaces
 import com.aktepetugce.favoriteplace.home.domain.usecases.SignOut
@@ -30,11 +30,13 @@ class HomeViewModel @Inject constructor(
                 is Response.Success<*> -> {
                     clearSession()
                 }
+
                 is Response.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }
                 }
+
                 else -> {
                     _uiState.update { currentState ->
                         currentState.copy(isLoading = true)
@@ -47,8 +49,6 @@ class HomeViewModel @Inject constructor(
     private fun clearSession() {
         _uiState.update { currentState ->
             currentState.copy(
-                placeList = listOf(),
-                errorMessage = null,
                 isLoading = false,
                 placesLoaded = false,
                 signOutSuccess = true
@@ -56,27 +56,34 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchPlaces() = viewModelScope.launch {
-        val email = getCurrentUseEmailUseCase.invoke()
-        fetchPlaceUseCase.invoke(email).collect { response ->
-            when (response) {
-                is Response.Success<*> -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            placeList = response.data as List<Place>?,
-                            placesLoaded = true,
-                            isLoading = false
-                        )
+    fun fetchPlaces() {
+        if (uiState.value.placesLoaded) {
+            return
+        }
+        viewModelScope.launch {
+            val email = getCurrentUseEmailUseCase.invoke()
+            fetchPlaceUseCase.invoke(email).collect { response ->
+                when (response) {
+                    is Response.Success<*> -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                placeList = response.data as List<Place>?,
+                                placesLoaded = true,
+                                isLoading = false
+                            )
+                        }
                     }
-                }
-                is Response.Error -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(errorMessage = response.message, isLoading = false)
+
+                    is Response.Error -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(errorMessage = response.message, isLoading = false)
+                        }
                     }
-                }
-                else -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(isLoading = true)
+
+                    else -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(isLoading = true)
+                        }
                     }
                 }
             }

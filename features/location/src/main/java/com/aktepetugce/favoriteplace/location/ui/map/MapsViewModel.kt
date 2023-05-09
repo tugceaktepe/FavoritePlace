@@ -3,10 +3,11 @@ package com.aktepetugce.favoriteplace.location.ui.map
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aktepetugce.favoriteplace.common.data.model.Place
-import com.aktepetugce.favoriteplace.location.domain.DownloadImageUrl
-import com.aktepetugce.favoriteplace.location.domain.SavePlaceDetail
-import com.aktepetugce.favoriteplace.location.domain.SavePlaceImage
+import com.aktepetugce.favoriteplace.common.domain.model.Place
+import com.aktepetugce.favoriteplace.common.model.Response
+import com.aktepetugce.favoriteplace.location.domain.usecase.DownloadImageUrl
+import com.aktepetugce.favoriteplace.location.domain.usecase.SavePlaceDetail
+import com.aktepetugce.favoriteplace.location.domain.usecase.SavePlaceImage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +22,7 @@ class MapsViewModel @Inject constructor(
     private val savePlaceDetailUseCase: SavePlaceDetail,
     private val savePlaceImageUseCase: SavePlaceImage,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MapsViewState())
     val uiState: StateFlow<MapsViewState> = _uiState
@@ -36,10 +37,10 @@ class MapsViewModel @Inject constructor(
         if (uri.toString() != "null") {
             savePlaceImageUseCase.invoke(placeId, uri).collect { response ->
                 when (response) {
-                    is com.aktepetugce.favoriteplace.common.model.Response.Success<*> -> {
+                    is Response.Success<*> -> {
                         downloadImageUrl(placeId, place)
                     }
-                    is com.aktepetugce.favoriteplace.common.model.Response.Error -> {
+                    is Response.Error -> {
                         _uiState.update { currentState ->
                             currentState.copy(errorMessage = response.message, isLoading = false)
                         }
@@ -47,19 +48,18 @@ class MapsViewModel @Inject constructor(
                 }
             }
         } else {
-            savePlaceDetail(placeId, place)
+            savePlaceDetail(placeId, "", place)
         }
     }
 
     private fun downloadImageUrl(placeId: String, uiPlace: Place) = viewModelScope.launch {
         downloadImageUrlUseCase.invoke(placeId).collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Response.Success<*> -> {
+                is Response.Success<*> -> {
                     val url = response.data as String?
-                    uiPlace.imageUrl = url ?: ""
-                    savePlaceDetail(placeId, uiPlace)
+                    savePlaceDetail(placeId, url, uiPlace)
                 }
-                is com.aktepetugce.favoriteplace.common.model.Response.Error -> {
+                is Response.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }
@@ -68,15 +68,15 @@ class MapsViewModel @Inject constructor(
         }
     }
 
-    private fun savePlaceDetail(placeId: String, uiPlace: Place) = viewModelScope.launch {
-        savePlaceDetailUseCase.invoke(placeId, uiPlace).collect { response ->
+    private fun savePlaceDetail(placeId: String, url: String?, uiPlace: Place) = viewModelScope.launch {
+        savePlaceDetailUseCase.invoke(placeId, url, uiPlace).collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Response.Success<*> -> {
+                is Response.Success<*> -> {
                     _uiState.update { currentState ->
                         currentState.copy(success = true, isLoading = false)
                     }
                 }
-                is com.aktepetugce.favoriteplace.common.model.Response.Error -> {
+                is Response.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }

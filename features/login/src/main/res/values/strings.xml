@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="forgot_password_title">Forgot Password</string>
-    <string name="register_title">Sign Up</string>
     <string name="sign_up">SIGN UP</string>
     <string name="sign_in">SIGN IN</string>
     <string name="enter_password">Enter Password</string>

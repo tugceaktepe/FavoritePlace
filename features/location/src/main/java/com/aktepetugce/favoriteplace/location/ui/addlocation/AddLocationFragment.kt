@@ -11,10 +11,10 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.aktepetugce.favoriteplace.common.data.model.Place
 import com.aktepetugce.favoriteplace.common.extension.onClick
 import com.aktepetugce.favoriteplace.location.R
 import com.aktepetugce.favoriteplace.location.databinding.FragmentAddLocationBinding
+import com.aktepetugce.favoriteplace.location.domain.model.MapsArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,15 +40,7 @@ class AddLocationFragment : com.aktepetugce.favoriteplace.common.base.BaseFragme
                 if (editTextLocationType.text.isNullOrEmpty() || editTextName.text.isNullOrEmpty()) {
                     showErrorMessage(getString(R.string.name_or_type_empty_error))
                 } else {
-                    val uiPlace = Place(
-                        userEmail = viewModel.currentUserEmail,
-                        name = editTextName.text.toString(),
-                        type = editTextLocationType.text.toString(),
-                        atmosphere = editTextAtmosphere.text.toString(),
-                        imageUrl = "",
-                        latitude = 0.0.toString(),
-                        longitude = 0.0.toString()
-                    )
+                    //TODO: UI state for input
                     val uri = if (this@AddLocationFragment::selectedImageUri.isInitialized) {
                         selectedImageUri
                     } else {
@@ -56,9 +48,8 @@ class AddLocationFragment : com.aktepetugce.favoriteplace.common.base.BaseFragme
                     }
                     val action =
                         AddLocationFragmentDirections.actionFragmentAddLocationToFragmentMaps(
-                            uiPlace,
-                            uri.toString(),
-                            findNavController().previousBackStackEntry?.destination?.id ?: -1
+                            homeDestinationId = findNavController().previousBackStackEntry?.destination?.id ?: -1,
+                            args = MapsArgs(editTextName.text.toString(), uri.toString()),
                         )
                     hideKeyboard()
                     findNavController().navigate(action)

@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.common.domain.usecases
+package com.aktepetugce.favoriteplace.common.domain.usecase
 
 import com.aktepetugce.favoriteplace.common.data.repo.AuthRepository
 import javax.inject.Inject

@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.aktepetugce.favoriteplace.common.data.model.Place
 import com.aktepetugce.favoriteplace.common.di.GlideApp
+import com.aktepetugce.favoriteplace.common.domain.model.Place
 import com.aktepetugce.favoriteplace.common.extension.onClick
 import com.aktepetugce.favoriteplace.home.databinding.ItemPlaceRowBinding
 

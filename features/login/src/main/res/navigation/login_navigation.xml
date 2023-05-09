@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/fragmentSplash"
         android:name="com.aktepetugce.favoriteplace.login.ui.splash.SplashFragment"
-        android:label="SplashFragment"
+        android:label="@string/app_title"
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_fragmentLogin"
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/fragmentLogin"
         android:name="com.aktepetugce.favoriteplace.login.ui.login.LoginFragment"
-        android:label="LoginFragment"
+        android:label="@string/app_title"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_fragmentLogin_to_fragmentRegister"
@@ -41,7 +41,7 @@
     <fragment
         android:id="@+id/fragmentRegister"
         android:name="com.aktepetugce.favoriteplace.login.ui.register.RegisterFragment"
-        android:label="RegisterFragment"
+        android:label="@string/app_title"
         tools:layout="@layout/fragment_register">
         <action
             android:id="@+id/action_fragmentRegister_to_fragmentLogin"
@@ -50,6 +50,6 @@
     <fragment
         android:id="@+id/fragmentForgotPassword"
         android:name="com.aktepetugce.favoriteplace.login.ui.forgotpassword.ForgotPasswordFragment"
-        android:label="fragment_forgot_password"
+        android:label="@string/app_title"
         tools:layout="@layout/fragment_forgot_password" />
 </navigation>

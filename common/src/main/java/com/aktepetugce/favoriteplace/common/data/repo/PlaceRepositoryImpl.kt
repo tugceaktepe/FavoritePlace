@@ -3,17 +3,10 @@ package com.aktepetugce.favoriteplace.common.data.repo
 import android.net.Uri
 import com.aktepetugce.favoriteplace.common.data.model.Place
 import com.aktepetugce.favoriteplace.common.model.Response
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -22,53 +15,28 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
-    private val database: FirebaseDatabase,
-    private val databaseReference: DatabaseReference,
+    private val firestore: FirebaseFirestore,
     private val storage: FirebaseStorage,
     private val storageReference: StorageReference,
     private val dispatcher: CoroutineDispatcher,
 ) : PlaceRepository {
 
-    override fun savePlaceDetail(placeId: String, place: Place) = flow<Response<*>> {
-        databaseReference.child("Places")
-            .child(placeId)
-            .child("user_email")
-            .setValue(place.userEmail)
-
-        databaseReference.child("Places")
-            .child(placeId)
-            .child("name")
-            .setValue(place.name)
-
-        databaseReference.child("Places")
-            .child(placeId)
-            .child("type")
-            .setValue(place.type)
-
-        databaseReference.child("Places")
-            .child(placeId)
-            .child("atmosphere")
-            .setValue(place.atmosphere)
-
-        databaseReference.child("Places")
-            .child(placeId)
-            .child("imageUrl")
-            .setValue(place.imageUrl)
-
-        databaseReference.child("Places")
-            .child(placeId)
-            .child("latitude")
-            .setValue(place.latitude)
-
-        databaseReference.child("Places")
-            .child(placeId)
-            .child("longitude")
-            .setValue(place.longitude)
-
-        databaseReference.child("Places")
-            .child(placeId)
-            .child("instance_id")
-            .setValue(System.currentTimeMillis())
+    override fun savePlaceDetail(email: String, place: Place) = flow<Response<*>> {
+        val documentRef = firestore.collection("places")
+            .document("$email")
+            .collection("myplaces")
+            .document("${place.id}")
+        val placeData = hashMapOf(
+            "id" to place.id,
+            "name" to place.name,
+            "description" to place.description,
+            "imageUrl" to place.imageUrl,
+            "longitude" to place.longitude,
+            "latitude" to place.latitude,
+            "feeling" to place.feeling,
+            "instance_id" to place.instanceId
+        )
+        documentRef.set(placeData)
         emit(Response.Success(true))
     }.flowOn(dispatcher)
         .catch { emit(Response.Error(it.message ?: it.toString())) }
@@ -91,28 +59,21 @@ class PlaceRepositoryImpl @Inject constructor(
     }.flowOn(dispatcher)
         .catch { emit(Response.Error(it.message ?: it.toString())) }
 
-    override fun fetchPlaces(userEmail: String) = callbackFlow {
-        val postListener = object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.trySendBlocking(Response.Error(error.message))
-                channel.close()
+    override fun fetchPlaces(email: String) = flow<Response<*>> {
+        val reference = firestore.collection("places")
+            .document(email)
+            .collection("myplaces")
+        val places = mutableListOf<Place>()
+        try {
+            reference.get().await().mapNotNull { snapShot ->
+                val place = snapShot.toObject(Place::class.java)
+                places.add(place)
             }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val items = dataSnapshot.children.map { ds ->
-                    ds.getValue(Place::class.java)
-                }
-                this@callbackFlow.trySendBlocking(Response.Success(items.filterNotNull()))
-                channel.close()
-            }
+        } catch (exception: Exception) {
+            emit(Response.Error(exception.message ?: exception.toString()))
         }
-        val dbReference = database.getReference("Places")
-        val query = dbReference.orderByChild("user_email").equalTo(userEmail)
-        query.addValueEventListener(postListener)
+        emit(Response.Success(places))
 
-        awaitClose {
-            query.removeEventListener(postListener)
-        }
     }.flowOn(dispatcher)
         .catch { emit(Response.Error(it.message ?: it.toString())) }
         .onStart { emit(Response.Loading) }

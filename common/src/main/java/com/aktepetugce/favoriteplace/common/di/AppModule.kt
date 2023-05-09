@@ -6,8 +6,7 @@ import com.aktepetugce.favoriteplace.common.data.repo.AuthRepositoryImpl
 import com.aktepetugce.favoriteplace.common.data.repo.PlaceRepository
 import com.aktepetugce.favoriteplace.common.data.repo.PlaceRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import dagger.Module
@@ -33,15 +32,13 @@ class AppModule {
     @Provides
     @Singleton
     fun providePlaceRepository(
-        database: FirebaseDatabase,
-        databaseReference: DatabaseReference,
+        firestore: FirebaseFirestore,
         storage: FirebaseStorage,
         storageReference: StorageReference,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): PlaceRepository =
         PlaceRepositoryImpl(
-            database,
-            databaseReference,
+            firestore,
             storage,
             storageReference,
             dispatcher

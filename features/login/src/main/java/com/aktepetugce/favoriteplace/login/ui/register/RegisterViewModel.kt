@@ -21,7 +21,7 @@ class RegisterViewModel @Inject constructor(
     fun signUp(userEmail: String, password: String) = viewModelScope.launch {
         signUpUseCase.invoke(userEmail, password).collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Response.Success<*> -> {
+                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
                     _uiState.update { currentState ->
                         currentState.copy(
                             success = true,
@@ -30,7 +30,7 @@ class RegisterViewModel @Inject constructor(
                     }
                 }
 
-                is com.aktepetugce.favoriteplace.common.model.Response.Error -> {
+                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }

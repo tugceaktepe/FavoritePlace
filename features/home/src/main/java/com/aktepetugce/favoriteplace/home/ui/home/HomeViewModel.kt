@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aktepetugce.favoriteplace.common.domain.model.Place
 import com.aktepetugce.favoriteplace.common.domain.usecase.GetCurrentUserEmail
-import com.aktepetugce.favoriteplace.common.model.Response
+import com.aktepetugce.favoriteplace.common.model.Result
 import com.aktepetugce.favoriteplace.home.domain.usecases.FetchPlaces
 import com.aktepetugce.favoriteplace.home.domain.usecases.SignOut
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,11 +27,11 @@ class HomeViewModel @Inject constructor(
     fun signOut() = viewModelScope.launch {
         signOutUseCase.invoke().collect { response ->
             when (response) {
-                is Response.Success<*> -> {
+                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
                     clearSession()
                 }
 
-                is Response.Error -> {
+                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }
@@ -64,7 +64,7 @@ class HomeViewModel @Inject constructor(
             val email = getCurrentUseEmailUseCase.invoke()
             fetchPlaceUseCase.invoke(email).collect { response ->
                 when (response) {
-                    is Response.Success<*> -> {
+                    is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
                         _uiState.update { currentState ->
                             currentState.copy(
                                 placeList = response.data as List<Place>?,
@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
                         }
                     }
 
-                    is Response.Error -> {
+                    is com.aktepetugce.favoriteplace.common.model.Resource.Result.Error -> {
                         _uiState.update { currentState ->
                             currentState.copy(errorMessage = response.message, isLoading = false)
                         }

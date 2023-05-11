@@ -1,13 +1,13 @@
 package com.aktepetugce.favoriteplace.common.model
 
-sealed class Response<out T> {
-    object Loading : Response<Nothing>()
+sealed class Result<out T> {
+    object Loading : Result<Nothing>()
 
     data class Success<out T>(
         val data: T
-    ) : Response<T>()
+    ) : Result<T>()
 
     data class Error(
         val message: String
-    ) : Response<Nothing>()
+    ) : Result<Nothing>()
 }

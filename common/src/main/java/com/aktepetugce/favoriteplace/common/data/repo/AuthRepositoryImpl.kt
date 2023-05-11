@@ -1,12 +1,11 @@
 package com.aktepetugce.favoriteplace.common.data.repo
 
-import com.aktepetugce.favoriteplace.common.model.Response
+import com.aktepetugce.favoriteplace.common.extension.toResult
+import com.aktepetugce.favoriteplace.common.model.Result
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -18,26 +17,23 @@ class AuthRepositoryImpl @Inject constructor(
         return auth.currentUser != null
     }
 
-    override fun signUp(userEmail: String, password: String) = flow<Response<*>> {
+    override fun signUp(userEmail: String, password: String) = flow<Result<*>> {
         auth.createUserWithEmailAndPassword(userEmail, password).await()
-        emit(Response.Success(true))
+        emit(Result.Success(true))
     }.flowOn(dispatcher)
-        .onStart { emit(Response.Loading) }
-        .catch { emit(Response.Error(it.message ?: it.toString())) }
+        .toResult()
 
-    override fun signIn(userEmail: String, password: String) = flow<Response<*>> {
+    override fun signIn(userEmail: String, password: String) = flow<Result<*>> {
         auth.signInWithEmailAndPassword(userEmail, password).await()
-        emit(Response.Success(true))
+        emit(Result.Success(true))
     }.flowOn(dispatcher)
-        .onStart { emit(Response.Loading) }
-        .catch { emit(Response.Error(it.message ?: it.toString())) }
+        .toResult()
 
-    override fun signOut() = flow<Response<*>> {
+    override fun signOut() = flow<Result<*>> {
         auth.signOut()
-        emit(Response.Success(true))
+        emit(Result.Success(true))
     }.flowOn(dispatcher)
-        .onStart { emit(Response.Loading) }
-        .catch { emit(Response.Error(it.message ?: it.toString())) }
+        .toResult()
 
     override fun getCurrentUserEmail(): String {
         return auth.currentUser?.email ?: ""

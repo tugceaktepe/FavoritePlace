@@ -35,4 +35,5 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.firestore)
+    debugApi(libs.leak.canary)
 }

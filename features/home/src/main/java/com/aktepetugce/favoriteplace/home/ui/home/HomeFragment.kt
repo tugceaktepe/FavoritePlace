@@ -102,4 +102,9 @@ class HomeFragment :
             else -> false
         }
     }
+
+    override fun onDestroyView() {
+        binding.recyclerViewLocations.adapter = null
+        super.onDestroyView()
+    }
 }

@@ -32,7 +32,7 @@ class LoginViewModel @Inject constructor(
     fun signIn(userEmail: String, password: String) = viewModelScope.launch {
         signInUseCase.invoke(userEmail, password).collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
+                is com.aktepetugce.favoriteplace.common.model.Result.Success<*> -> {
                     _uiState.update { currentState ->
                         currentState.copy(
                             isLoginSuccess = true,
@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(
                     }
                 }
 
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Error -> {
+                is com.aktepetugce.favoriteplace.common.model.Result.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }

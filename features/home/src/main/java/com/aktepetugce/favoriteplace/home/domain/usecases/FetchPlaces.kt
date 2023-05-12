@@ -15,8 +15,8 @@ class FetchPlaces @Inject constructor(
     operator fun invoke(userEmail: String) = flow {
         repository.fetchPlaces(userEmail).collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
-                    //TODO: refactor unchecked cast warning
+                is Result.Success<*> -> {
+                    // TODO: refactor unchecked cast warning
                     val placeList = response.data as ArrayList<PlaceDTO>
                     val placeListForUI = placeList.sortedBy { it.instanceId }.map {
                         placeMapper.mapFrom(it)

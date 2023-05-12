@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 
 @Parcelize
-data class Place (
+data class Place(
     val id: String,
     val name: String,
     val description: String,

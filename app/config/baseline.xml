@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>FinalNewline:com.aktepetugce.favoriteplace.location.ui.map.MapsFragment.kt:1</ID>
-    <ID>NewLineAtEndOfFile:MapsFragment.kt$com.aktepetugce.favoriteplace.location.ui.map.MapsFragment.kt</ID>
-  </CurrentIssues>
-</SmellBaseline>

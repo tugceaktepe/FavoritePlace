@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.aktepetugce.favoriteplace.common.extension.onClick
 import com.aktepetugce.favoriteplace.location.R
@@ -22,7 +21,6 @@ class AddLocationFragment : com.aktepetugce.favoriteplace.common.base.BaseFragme
     FragmentAddLocationBinding::inflate,
     false
 ) {
-    private val viewModel: AddLocationViewModel by viewModels()
     private lateinit var selectedImageUri: Uri
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,7 +38,7 @@ class AddLocationFragment : com.aktepetugce.favoriteplace.common.base.BaseFragme
                 if (editTextLocationType.text.isNullOrEmpty() || editTextName.text.isNullOrEmpty()) {
                     showErrorMessage(getString(R.string.name_or_type_empty_error))
                 } else {
-                    //TODO: UI state for input
+                    // TODO: UI state for input
                     val uri = if (this@AddLocationFragment::selectedImageUri.isInitialized) {
                         selectedImageUri
                     } else {

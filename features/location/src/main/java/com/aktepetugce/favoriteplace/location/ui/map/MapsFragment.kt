@@ -104,7 +104,7 @@ class MapsFragment :
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save_location) {
-            //TODO: move this logic to viewmodel
+            // TODO: move this logic to viewmodel
             val place = Place(
                 name = name,
                 latitude = latitude,

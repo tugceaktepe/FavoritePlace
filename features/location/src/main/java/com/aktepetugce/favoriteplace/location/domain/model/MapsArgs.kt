@@ -5,6 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class MapsArgs(
-    val name : String,
-    val uri : String
+    val name: String,
+    val uri: String
 ) : Parcelable

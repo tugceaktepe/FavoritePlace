@@ -52,9 +52,9 @@ class PlaceRepositoryImpl @Inject constructor(
         emit(Result.Success(true))
     }.flowOn(dispatcher)
 
-    override fun fetchPlaces(email: String) = flow {
+    override fun fetchPlaces(userEmail: String) = flow {
         val reference = firestore.collection("places")
-            .document(email)
+            .document(userEmail)
             .collection("myplaces")
         val places = mutableListOf<Place>()
         try {

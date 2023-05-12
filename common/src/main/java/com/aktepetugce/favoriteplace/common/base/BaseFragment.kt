@@ -11,8 +11,7 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 
 open class BaseFragment<T : ViewBinding>(
-    private val inflateMethod: (LayoutInflater, ViewGroup?, Boolean) -> T,
-    private val hasOptionsMenu: Boolean
+    private val inflateMethod: (LayoutInflater, ViewGroup?, Boolean) -> T
 ) : Fragment() {
 
     private var _binding: T? = null
@@ -20,9 +19,6 @@ open class BaseFragment<T : ViewBinding>(
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = inflateMethod.invoke(inflater, container, false)
-        if (hasOptionsMenu) {
-            setHasOptionsMenu(true)
-        }
         return binding.root
     }
 

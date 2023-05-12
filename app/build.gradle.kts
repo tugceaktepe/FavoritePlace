@@ -5,6 +5,7 @@ plugins {
     id("favoriteplace.android.hilt")
     id("jacoco")
     id("favoriteplace.android.application.firebase")
+    id("favoriteplace.detekt")
 }
 
 android {

@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.aktepetugce.favoriteplace.R
 import com.aktepetugce.favoriteplace.databinding.ActivityMainBinding
+import com.aktepetugce.favoriteplace.home.R.id.fragmentDetail
 import com.aktepetugce.favoriteplace.home.R.id.fragmentHome
 import com.aktepetugce.favoriteplace.location.R.id.fragmentAddLocation
 import com.aktepetugce.favoriteplace.location.R.id.fragmentMaps
@@ -71,6 +72,7 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
             fragmentSplash,
             fragmentLogin,
             fragmentRegister,
+            fragmentDetail,
             fragmentForgotPassword,
             fragmentMaps,
             fragmentAddLocation -> {

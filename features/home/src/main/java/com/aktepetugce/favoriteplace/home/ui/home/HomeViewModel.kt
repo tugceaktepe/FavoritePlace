@@ -27,11 +27,11 @@ class HomeViewModel @Inject constructor(
     fun signOut() = viewModelScope.launch {
         signOutUseCase.invoke().collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
+                is Result.Success<*> -> {
                     clearSession()
                 }
 
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Error -> {
+                is Result.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }
@@ -56,6 +56,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun fetchPlaces() {
         if (uiState.value.placesLoaded) {
             return
@@ -64,7 +65,7 @@ class HomeViewModel @Inject constructor(
             val email = getCurrentUseEmailUseCase.invoke()
             fetchPlaceUseCase.invoke(email).collect { response ->
                 when (response) {
-                    is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
+                    is Result.Success<*> -> {
                         _uiState.update { currentState ->
                             currentState.copy(
                                 placeList = response.data as List<Place>?,
@@ -74,7 +75,7 @@ class HomeViewModel @Inject constructor(
                         }
                     }
 
-                    is com.aktepetugce.favoriteplace.common.model.Resource.Result.Error -> {
+                    is Result.Error -> {
                         _uiState.update { currentState ->
                             currentState.copy(errorMessage = response.message, isLoading = false)
                         }

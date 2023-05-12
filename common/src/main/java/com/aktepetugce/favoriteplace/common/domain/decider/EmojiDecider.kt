@@ -4,7 +4,7 @@ import com.aktepetugce.favoriteplace.common.domain.model.Feeling
 import javax.inject.Inject
 
 class EmojiDecider @Inject constructor() {
-    fun decideEmoji(feelingRate: Int): Int{
+    fun decideEmoji(feelingRate: Int): Int {
         return when (feelingRate) {
             EMPTY -> Feeling.EMPTY.emojiIcon
             AWFUL -> Feeling.AWFUL.emojiIcon

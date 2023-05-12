@@ -17,8 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RegisterFragment :
     com.aktepetugce.favoriteplace.common.base.BaseFragment<FragmentRegisterBinding>(
-        FragmentRegisterBinding::inflate,
-        false
+        FragmentRegisterBinding::inflate
     ) {
     private val viewModel: RegisterViewModel by viewModels()
 

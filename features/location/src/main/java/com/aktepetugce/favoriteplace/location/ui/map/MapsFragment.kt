@@ -14,10 +14,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
@@ -39,9 +41,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MapsFragment :
-    BaseFragment<FragmentMapsBinding>(FragmentMapsBinding::inflate, hasOptionsMenu = true),
+    BaseFragment<FragmentMapsBinding>(FragmentMapsBinding::inflate),
     OnMapReadyCallback,
-    GoogleMap.OnMapLongClickListener {
+    GoogleMap.OnMapLongClickListener,
+    MenuProvider {
 
     private val args: MapsFragmentArgs by navArgs()
     private lateinit var viewModel: MapsViewModel
@@ -77,6 +80,8 @@ class MapsFragment :
         viewModel = ViewModelProvider(this).get(MapsViewModel::class.java)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         subscribeObservers()
     }
 
@@ -92,32 +97,6 @@ class MapsFragment :
                 }
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.maps_menu, menu)
-        if (menu is MenuBuilder) {
-            menu.setOptionalIconsVisible(true)
-        }
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.save_location) {
-            //TODO: move this logic to viewmodel
-            val place = Place(
-                name = name,
-                latitude = latitude,
-                longitude = longitude,
-                description = "",
-                feeling = Pair(2, ic_launcher_background),
-                id = "",
-                instanceId = 0,
-                imageUrl = ""
-            )
-            viewModel.savePlace(place, uri)
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -187,5 +166,31 @@ class MapsFragment :
 
     companion object {
         const val ZOOM_OPTION = 15f
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.maps_menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
+            R.id.save_location -> {
+                // TODO: move this logic to viewmodel
+                val place = Place(
+                    name = name,
+                    latitude = latitude,
+                    longitude = longitude,
+                    description = "",
+                    feeling = Pair(2, ic_launcher_background),
+                    id = "",
+                    instanceId = 0,
+                    imageUrl = ""
+                )
+                viewModel.savePlace(place, uri)
+                true
+            }
+
+            else -> false
+        }
     }
 }

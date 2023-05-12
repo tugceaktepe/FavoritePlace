@@ -59,7 +59,7 @@ class HomeFragment :
         viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
             binding.progressBar.isVisible = uiState.isLoading
             uiState.errorMessage?.let {
-                //TODO: Convert it one-shot event
+                // TODO: Convert it one-shot event
                 showErrorMessage(it)
                 viewModel.userMessageShown()
             } ?: run {

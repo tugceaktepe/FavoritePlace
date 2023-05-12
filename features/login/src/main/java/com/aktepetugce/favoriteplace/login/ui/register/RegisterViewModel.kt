@@ -2,6 +2,7 @@ package com.aktepetugce.favoriteplace.login.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aktepetugce.favoriteplace.common.model.Result
 import com.aktepetugce.favoriteplace.login.domain.usecases.SignUp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,7 @@ class RegisterViewModel @Inject constructor(
     fun signUp(userEmail: String, password: String) = viewModelScope.launch {
         signUpUseCase.invoke(userEmail, password).collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
+                is Result.Success<*> -> {
                     _uiState.update { currentState ->
                         currentState.copy(
                             success = true,
@@ -30,7 +31,7 @@ class RegisterViewModel @Inject constructor(
                     }
                 }
 
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Error -> {
+                is Result.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }

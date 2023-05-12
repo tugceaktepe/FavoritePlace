@@ -66,7 +66,6 @@ class PlaceRepositoryImpl @Inject constructor(
             emit(Result.Error(exception.message ?: exception.toString()))
         }
         emit(places)
-
     }.flowOn(dispatcher)
         .toResult()
 }

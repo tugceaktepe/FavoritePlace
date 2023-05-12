@@ -23,22 +23,21 @@ class MapsViewModel @Inject constructor(
     val uiState: StateFlow<MapsViewState> = _uiState
 
     fun savePlace(place: Place, uri: Uri) = viewModelScope.launch {
-
         savePlaceImageUseCase.invoke(uri, place).collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Success<*> -> {
+                is Result.Success<*> -> {
                     _uiState.update { currentState ->
                         currentState.copy(success = true, isLoading = false)
                     }
                 }
 
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Error -> {
+                is Result.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = response.message, isLoading = false)
                     }
                 }
 
-                is com.aktepetugce.favoriteplace.common.model.Resource.Result.Loading -> {
+                is Result.Loading -> {
                     _uiState.update { currentState ->
                         currentState.copy(isLoading = true)
                     }

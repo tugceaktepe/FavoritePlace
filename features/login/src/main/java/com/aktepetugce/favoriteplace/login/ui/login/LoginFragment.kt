@@ -16,8 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginFragment : com.aktepetugce.favoriteplace.common.base.BaseFragment<FragmentLoginBinding>(
-    FragmentLoginBinding::inflate,
-    false
+    FragmentLoginBinding::inflate
 ) {
     private val viewModel: LoginViewModel by viewModels()
 

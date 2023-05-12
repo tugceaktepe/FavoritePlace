@@ -17,8 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailFragment :
     com.aktepetugce.favoriteplace.common.base.BaseFragment<FragmentDetailBinding>(
-        FragmentDetailBinding::inflate,
-        false
+        FragmentDetailBinding::inflate
     ),
     OnMapReadyCallback {
 
@@ -47,8 +46,8 @@ class DetailFragment :
                     .into(imageViewPlace)
             }
             mGoogleMap.clear()
-            if (place.latitude?.toDouble() != 0.0 && place.longitude?.toDouble() != 0.0) {
-                val placeLocation = LatLng(place.latitude?.toDouble() ?: 0.0, place.longitude?.toDouble() ?: 0.0)
+            if (place.latitude != 0.0 && place.longitude != 0.0) {
+                val placeLocation = LatLng(place.latitude, place.longitude)
                 mGoogleMap.addMarker(MarkerOptions().position(placeLocation).title(place.name))
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation, ZOOM_OPTION))
             }

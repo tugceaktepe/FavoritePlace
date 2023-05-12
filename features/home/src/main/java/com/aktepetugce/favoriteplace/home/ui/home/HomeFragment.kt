@@ -1,15 +1,16 @@
 package com.aktepetugce.favoriteplace.home.ui.home
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.net.toUri
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -23,7 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment :
-    BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate, hasOptionsMenu = true) {
+    BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
+    MenuProvider {
 
     private val viewModel: HomeViewModel by viewModels()
     private val placeRecyclerAdapter: PlaceRecyclerAdapter by lazy {
@@ -35,17 +37,19 @@ class HomeFragment :
         viewModel.fetchPlaces()
         subscribeObservers()
         prepareRecyclerView()
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun prepareRecyclerView() {
         binding.recyclerViewLocations.adapter = placeRecyclerAdapter
         binding.recyclerViewLocations.addItemDecoration(
             (
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.VERTICAL
-                )
-                )
+                    DividerItemDecoration(
+                        requireContext(),
+                        DividerItemDecoration.VERTICAL
+                    )
+                    )
         )
         placeRecyclerAdapter.setOnItemClickListener { position ->
             viewModel.uiState.value.placeList?.let {
@@ -84,19 +88,18 @@ class HomeFragment :
         )
     }
 
-    @SuppressLint("RestrictedApi")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.home_menu, menu)
-        if (menu is MenuBuilder) {
-            menu.setOptionalIconsVisible(true)
-        }
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.home_menu, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.log_out) {
-            viewModel.signOut()
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
+            R.id.log_out -> {
+                viewModel.signOut()
+                true
+            }
+
+            else -> false
         }
-        return super.onOptionsItemSelected(item)
     }
 }

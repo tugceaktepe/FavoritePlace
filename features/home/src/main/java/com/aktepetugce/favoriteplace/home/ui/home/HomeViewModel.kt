@@ -56,6 +56,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun fetchPlaces() {
         if (uiState.value.placesLoaded) {
             return

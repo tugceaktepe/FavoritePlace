@@ -18,10 +18,10 @@ class FetchPlaces @Inject constructor(
     private val authRepository: AuthRepository,
     private val placeMapper: PlaceMapper
 ) {
-    operator fun invoke(): Flow<Result<List<Place>>> = flow {
+    operator fun invoke(isLoading: Boolean): Flow<Result<List<Place>>> = flow {
         val userEmail = authRepository.getCurrentUserEmail()
         emit(placeRepository.fetchPlaces(userEmail))
-    }.toResult().mapResult {
+    }.toResult(isLoading = isLoading).mapResult {
         placeMapper.mapFrom(it)
     }.flowOn(Dispatchers.IO)
 }

@@ -2,11 +2,12 @@ package com.aktepetugce.favoriteplace.login.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aktepetugce.favoriteplace.common.model.Result
 import com.aktepetugce.favoriteplace.login.domain.usecases.IsUserAuthenticated
 import com.aktepetugce.favoriteplace.login.domain.usecases.SignIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,47 +19,37 @@ class LoginViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginViewState())
-    val uiState: StateFlow<LoginViewState> = _uiState
+    private val _uiState: MutableStateFlow<LoginUiState?> = MutableStateFlow(null)
+    val uiState = _uiState.asStateFlow()
 
-    init {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isUserAuthenticated = checkUserAuthenticated.invoke()
-            )
+    fun checkUser() = viewModelScope.launch {
+        checkUserAuthenticated().collect { isUserAuthenticated ->
+            if (isUserAuthenticated) {
+                _uiState.update { LoginUiState.UserSignedIn }
+            }
         }
     }
 
     fun signIn(userEmail: String, password: String) = viewModelScope.launch {
         signInUseCase.invoke(userEmail, password).collect { response ->
             when (response) {
-                is com.aktepetugce.favoriteplace.common.model.Result.Success<*> -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isLoginSuccess = true,
-                            isLoading = false
-                        )
-                    }
+                is Result.Success<*> -> {
+                    _uiState.update { LoginUiState.UserSignedIn }
                 }
 
-                is com.aktepetugce.favoriteplace.common.model.Result.Error -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(errorMessage = response.message, isLoading = false)
-                    }
+                is Result.Error -> {
+                    _uiState.update { LoginUiState.Error(message = response.message) }
                 }
 
                 else -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(isLoading = true)
-                    }
+                    _uiState.update { LoginUiState.Loading }
                 }
             }
         }
     }
 
-    fun userMessageShown() {
-        _uiState.update { currentState ->
-            currentState.copy(errorMessage = null)
-        }
+    // TODO: move logic to usecase layer and change validation
+    fun isUserNamePasswordValid(email: String, password: String): Boolean {
+        return !(email.isEmpty() || password.isEmpty())
     }
 }

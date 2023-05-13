@@ -1,33 +1,27 @@
 package com.aktepetugce.favoriteplace.home.domain.usecases
 
+import com.aktepetugce.favoriteplace.common.data.repo.AuthRepository
 import com.aktepetugce.favoriteplace.common.data.repo.PlaceRepository
 import com.aktepetugce.favoriteplace.common.domain.mapper.PlaceMapper
+import com.aktepetugce.favoriteplace.common.domain.model.Place
+import com.aktepetugce.favoriteplace.common.extension.mapResult
+import com.aktepetugce.favoriteplace.common.extension.toResult
 import com.aktepetugce.favoriteplace.common.model.Result
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
-import com.aktepetugce.favoriteplace.common.data.model.Place as PlaceDTO
 
 class FetchPlaces @Inject constructor(
-    private val repository: PlaceRepository,
+    private val placeRepository: PlaceRepository,
+    private val authRepository: AuthRepository,
     private val placeMapper: PlaceMapper
 ) {
-    @Suppress("UNCHECKED_CAST")
-    operator fun invoke(userEmail: String) = flow {
-        repository.fetchPlaces(userEmail).collect { response ->
-            when (response) {
-                is Result.Success<*> -> {
-                    // TODO: refactor unchecked cast warning
-                    val placeList = response.data as ArrayList<PlaceDTO>
-                    val placeListForUI = placeList.sortedBy { it.instanceId }.map {
-                        placeMapper.mapFrom(it)
-                    }
-                    emit(Result.Success(placeListForUI))
-                }
-
-                else -> {
-                    emit(response)
-                }
-            }
-        }
-    }
+    operator fun invoke(): Flow<Result<List<Place>>> = flow {
+        val userEmail = authRepository.getCurrentUserEmail()
+        emit(placeRepository.fetchPlaces(userEmail))
+    }.toResult().mapResult {
+        placeMapper.mapFrom(it)
+    }.flowOn(Dispatchers.IO)
 }

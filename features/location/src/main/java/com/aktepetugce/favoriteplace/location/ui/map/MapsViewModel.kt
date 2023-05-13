@@ -8,8 +8,7 @@ import com.aktepetugce.favoriteplace.common.model.Result
 import com.aktepetugce.favoriteplace.location.domain.usecase.SavePlaceImage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,36 +18,24 @@ class MapsViewModel @Inject constructor(
 
     ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MapsViewState())
-    val uiState: StateFlow<MapsViewState> = _uiState
+    private val _uiState: MutableStateFlow<MapsUiState> = MutableStateFlow(MapsUiState.InitialState)
+    val uiState = _uiState.asStateFlow()
 
     fun savePlace(place: Place, uri: Uri) = viewModelScope.launch {
-        savePlaceImageUseCase.invoke(uri, place).collect { response ->
+        savePlaceImageUseCase(uri, place).collect { response ->
             when (response) {
                 is Result.Success<*> -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(success = true, isLoading = false)
-                    }
+                    _uiState.value = MapsUiState.LocationIsAdded
                 }
 
                 is Result.Error -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(errorMessage = response.message, isLoading = false)
-                    }
+                    _uiState.value = MapsUiState.Error(response.message)
                 }
 
                 is Result.Loading -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(isLoading = true)
-                    }
+                    _uiState.value = MapsUiState.Loading
                 }
             }
-        }
-    }
-
-    fun userMessageShown() {
-        _uiState.update { currentState ->
-            currentState.copy(errorMessage = null)
         }
     }
 }

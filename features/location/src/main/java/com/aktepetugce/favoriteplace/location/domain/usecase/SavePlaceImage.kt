@@ -7,6 +7,7 @@ import com.aktepetugce.favoriteplace.common.domain.model.Place
 import com.aktepetugce.favoriteplace.common.extension.toResult
 import com.aktepetugce.favoriteplace.common.model.Result
 import com.aktepetugce.favoriteplace.common.util.StorageUtil
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.UUID
 import javax.inject.Inject
@@ -16,7 +17,7 @@ class SavePlaceImage @Inject constructor(
     private val repository: PlaceRepository,
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(imageUri: Uri, place: Place) = flow<Result<*>> {
+    operator fun invoke(imageUri: Uri, place: Place): Flow<Result<Unit>> {
         val imageId = place.id.ifEmpty { UUID.randomUUID().toString() }
         var placeDTO = PlaceDTO(
             id = imageId,
@@ -28,19 +29,17 @@ class SavePlaceImage @Inject constructor(
             latitude = place.latitude.toString(),
             instanceId = if (place.instanceId == 0L) System.currentTimeMillis() else place.instanceId
         )
-        if (imageUri.toString() == "null") {
-            repository.savePlaceDetail(authRepository.getCurrentUserEmail(), placeDTO).collect {
-                emit(it)
+        return flow {
+            if (imageUri.toString() == "null") {
+                emit(repository.savePlaceDetail(authRepository.getCurrentUserEmail(), placeDTO))
+            } else {
+                val imageSaveResult =
+                    repository.saveImage(StorageUtil.formatImagePath(imageId), imageUri)
+                if (imageSaveResult) {
+                    placeDTO = placeDTO.copy(imageUrl = repository.downloadImageUrl(imageId))
+                }
+                emit(repository.savePlaceDetail(authRepository.getCurrentUserEmail(), placeDTO))
             }
-        } else {
-            val imageSaveResult =
-                repository.saveImage(StorageUtil.formatImagePath(imageId), imageUri)
-            if (imageSaveResult) {
-                placeDTO = placeDTO.copy(imageUrl = repository.downloadImageUrl(imageId))
-            }
-            repository.savePlaceDetail(authRepository.getCurrentUserEmail(), placeDTO).collect {
-                emit(it)
-            }
-        }
-    }.toResult()
+        }.toResult()
+    }
 }

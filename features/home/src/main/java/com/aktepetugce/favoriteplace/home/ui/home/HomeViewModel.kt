@@ -22,8 +22,8 @@ class HomeViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.InitialState)
     val uiState = _uiState.asStateFlow()
 
-    fun fetchPlaces() = viewModelScope.launch {
-        fetchPlaceUseCase().collect { response ->
+    fun fetchPlaces(isLoading: Boolean = true) = viewModelScope.launch {
+        fetchPlaceUseCase(isLoading).collect { response ->
             when (response) {
                 is Result.Success<*> -> {
                     _uiState.update {

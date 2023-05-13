@@ -37,3 +37,19 @@ fun <T> Flow<T>.toResult(isLoading: Boolean = true): Flow<Result<T>> {
             emit(Result.Error(exception.message ?: exception.toString()))
         }
 }
+
+fun <T, R> Flow<Result<T>>.mapResult(mapper: suspend (T) -> R): Flow<Result<R>> {
+    return map {
+        when (it) {
+            is Result.Success -> {
+                val data = it.data
+                Result.Success(mapper(data))
+            }
+
+            is Result.Loading -> it
+            is Result.Error -> it
+        }
+    }.catch {
+        emit(Result.Error(it.message ?: it.toString()))
+    }
+}

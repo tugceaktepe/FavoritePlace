@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailFragment :
-    com.aktepetugce.favoriteplace.common.base.BaseFragment<FragmentDetailBinding>(
+    com.aktepetugce.favoriteplace.common.ui.BaseFragment<FragmentDetailBinding>(
         FragmentDetailBinding::inflate
     ),
     OnMapReadyCallback {

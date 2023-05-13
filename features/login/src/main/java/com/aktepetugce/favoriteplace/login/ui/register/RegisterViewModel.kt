@@ -6,7 +6,7 @@ import com.aktepetugce.favoriteplace.common.model.Result
 import com.aktepetugce.favoriteplace.login.domain.usecases.SignUp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,39 +16,29 @@ class RegisterViewModel @Inject constructor(
     private val signUpUseCase: SignUp,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RegisterViewState())
-    val uiState: StateFlow<RegisterViewState> = _uiState
+    private val _uiState: MutableStateFlow<RegisterUiState?> = MutableStateFlow(null)
+    val uiState = _uiState.asStateFlow()
 
     fun signUp(userEmail: String, password: String) = viewModelScope.launch {
         signUpUseCase.invoke(userEmail, password).collect { response ->
             when (response) {
                 is Result.Success<*> -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            success = true,
-                            isLoading = false
-                        )
-                    }
+                    _uiState.update { RegisterUiState.UserRegistered }
                 }
 
                 is Result.Error -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(errorMessage = response.message, isLoading = false)
-                    }
+                    _uiState.update { RegisterUiState.Error(message = response.message) }
                 }
 
                 else -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(isLoading = true)
-                    }
+                    _uiState.update { RegisterUiState.Loading }
                 }
             }
         }
     }
 
-    fun userMessageShown() {
-        _uiState.update { currentState ->
-            currentState.copy(errorMessage = null)
-        }
+    // TODO: move logic to usecase layer and change validation
+    fun isUserNamePasswordValid(email: String, password: String): Boolean {
+        return !(email.isEmpty() || password.isEmpty())
     }
 }

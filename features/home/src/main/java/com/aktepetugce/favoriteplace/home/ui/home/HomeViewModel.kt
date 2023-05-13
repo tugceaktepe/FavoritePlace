@@ -3,13 +3,12 @@ package com.aktepetugce.favoriteplace.home.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aktepetugce.favoriteplace.common.domain.model.Place
-import com.aktepetugce.favoriteplace.common.domain.usecase.GetCurrentUserEmail
 import com.aktepetugce.favoriteplace.common.model.Result
 import com.aktepetugce.favoriteplace.home.domain.usecases.FetchPlaces
 import com.aktepetugce.favoriteplace.home.domain.usecases.SignOut
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,83 +16,63 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val fetchPlaceUseCase: FetchPlaces,
-    private val getCurrentUseEmailUseCase: GetCurrentUserEmail,
     private val signOutUseCase: SignOut
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeViewState())
-    val uiState: StateFlow<HomeViewState> = _uiState
+    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.InitialState)
+    val uiState = _uiState.asStateFlow()
 
-    fun signOut() = viewModelScope.launch {
-        signOutUseCase.invoke().collect { response ->
+    fun fetchPlaces() = viewModelScope.launch {
+        fetchPlaceUseCase().collect { response ->
             when (response) {
                 is Result.Success<*> -> {
-                    clearSession()
+                    _uiState.update {
+                        HomeUiState.PlaceListLoaded(
+                            placeList = response.data as List<Place>
+                        )
+                    }
                 }
 
                 is Result.Error -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(errorMessage = response.message, isLoading = false)
+                    _uiState.update {
+                        HomeUiState.Error(
+                            message = response.message,
+                            isNotShown = true
+                        )
                     }
                 }
 
                 else -> {
-                    _uiState.update { currentState ->
-                        currentState.copy(isLoading = true)
-                    }
+                    _uiState.update { HomeUiState.Loading }
                 }
             }
         }
     }
 
-    private fun clearSession() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isLoading = false,
-                placesLoaded = false,
-                signOutSuccess = true
-            )
-        }
-    }
+    fun signOut() = viewModelScope.launch {
+        signOutUseCase().collect { response ->
+            when (response) {
+                is Result.Success<*> -> {
+                    _uiState.update { HomeUiState.UserSignedOut }
+                }
 
-    @Suppress("UNCHECKED_CAST")
-    fun fetchPlaces() {
-        if (uiState.value.placesLoaded) {
-            return
-        }
-        viewModelScope.launch {
-            val email = getCurrentUseEmailUseCase.invoke()
-            fetchPlaceUseCase.invoke(email).collect { response ->
-                when (response) {
-                    is Result.Success<*> -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                placeList = response.data as List<Place>?,
-                                placesLoaded = true,
-                                isLoading = false
-                            )
-                        }
+                is Result.Error -> {
+                    _uiState.update {
+                        HomeUiState.Error(
+                            message = response.message,
+                            isNotShown = true
+                        )
                     }
+                }
 
-                    is Result.Error -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(errorMessage = response.message, isLoading = false)
-                        }
-                    }
-
-                    else -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(isLoading = true)
-                        }
-                    }
+                else -> {
+                    _uiState.update { HomeUiState.Loading }
                 }
             }
         }
     }
 
-    fun userMessageShown() {
-        _uiState.update { currentState ->
-            currentState.copy(errorMessage = null)
-        }
+    fun errorMessageShown() {
+        _uiState.update { HomeUiState.Error(message = "", isNotShown = false) }
     }
 }

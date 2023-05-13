@@ -1,11 +1,9 @@
 package com.aktepetugce.favoriteplace.common.data.repo
 
-import kotlinx.coroutines.flow.Flow
-
 interface AuthRepository {
     fun isUserAuthenticatedInFirebase(): Boolean
-    fun signUp(userEmail: String, password: String): Flow<Any>
-    fun signIn(userEmail: String, password: String): Flow<Any>
-    fun signOut(): Flow<Any>
+    suspend fun signUp(userEmail: String, password: String)
+    suspend fun signIn(userEmail: String, password: String)
+    suspend fun signOut()
     fun getCurrentUserEmail(): String
 }

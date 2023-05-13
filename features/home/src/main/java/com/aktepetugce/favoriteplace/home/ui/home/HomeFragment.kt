@@ -37,23 +37,29 @@ class HomeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         subscribeObservers()
-        prepareRecyclerView()
+        initializeUI()
+
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun prepareRecyclerView() {
-        binding.recyclerViewLocations.adapter = placeRecyclerAdapter
-        binding.recyclerViewLocations.addItemDecoration(
-            (
-                    DividerItemDecoration(
-                        requireContext(),
-                        DividerItemDecoration.VERTICAL
-                    )
-                    )
-        )
+    private fun initializeUI() {
+        with(binding) {
+            recyclerViewLocations.adapter = placeRecyclerAdapter
+            recyclerViewLocations.addItemDecoration(
+                (
+                        DividerItemDecoration(
+                            requireContext(),
+                            DividerItemDecoration.VERTICAL
+                        )
+                        )
+            )
+            swipeRefreshLayout.setOnRefreshListener {
+                viewModel.fetchPlaces(isLoading = false)
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
         placeRecyclerAdapter.setOnItemClickListener { placeItem ->
             navigatePlaceToDetail(placeItem)
         }

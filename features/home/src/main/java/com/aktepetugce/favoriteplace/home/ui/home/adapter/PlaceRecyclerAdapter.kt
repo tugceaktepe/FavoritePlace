@@ -14,15 +14,17 @@ import com.aktepetugce.favoriteplace.home.databinding.ItemPlaceRowBinding
 class PlaceRecyclerAdapter : ListAdapter<Place, PlaceRecyclerAdapter.PlaceViewHolder>(
     PlaceDiffCallBack()
 ) {
-
     inner class PlaceViewHolder(val binding: ItemPlaceRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(place: Place) {
-            binding.apply {
+            with(binding) {
+                placeItemLayout.onClick {
+                    onItemClickListener(place)
+                }
+                textViewName.text = place.name
                 GlideApp.with(binding.root.context)
                     .load(place.imageUrl)
                     .into(imageViewThumbnail)
-                textViewName.text = place.name
             }
         }
     }
@@ -37,19 +39,18 @@ class PlaceRecyclerAdapter : ListAdapter<Place, PlaceRecyclerAdapter.PlaceViewHo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
-        val binding = ItemPlaceRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemPlaceRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PlaceViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-        holder.onBind(getItem(position))
-        holder.binding.placeItemLayout.onClick {
-            onItemClickListener(position)
-        }
+        val place = getItem(position)
+        holder.onBind(place)
     }
 
-    private lateinit var onItemClickListener: (Int) -> Unit
-    fun setOnItemClickListener(listener: (Int) -> Unit) {
+    private lateinit var onItemClickListener: (Place) -> Unit
+    fun setOnItemClickListener(listener: (Place) -> Unit) {
         onItemClickListener = listener
     }
 }

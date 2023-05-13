@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDeepLinkRequest
@@ -26,9 +25,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
 import com.aktepetugce.favoriteplace.common.R.drawable.ic_launcher_background
-import com.aktepetugce.favoriteplace.common.base.BaseFragment
 import com.aktepetugce.favoriteplace.common.domain.model.Place
+import com.aktepetugce.favoriteplace.common.extension.gone
 import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
+import com.aktepetugce.favoriteplace.common.extension.showSnackbar
+import com.aktepetugce.favoriteplace.common.extension.visible
+import com.aktepetugce.favoriteplace.common.ui.BaseFragment
 import com.aktepetugce.favoriteplace.location.R
 import com.aktepetugce.favoriteplace.location.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -86,14 +88,21 @@ class MapsFragment :
     }
 
     private fun subscribeObservers() {
-        viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
-            binding.progressBar.isVisible = uiState.isLoading
-            uiState.errorMessage?.let {
-                showErrorMessage(it)
-                viewModel.userMessageShown()
-            } ?: run {
-                if (uiState.success) {
-                    navigateToHome()
+        with(binding) {
+            viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
+                when (uiState) {
+                    is MapsUiState.InitialState -> {}
+                    is MapsUiState.Loading -> progressBar.visible()
+                    is MapsUiState.Error -> {
+                        progressBar.gone()
+                        requireView().showSnackbar(uiState.message)
+                        viewModel.uiState
+                    }
+
+                    is MapsUiState.LocationIsAdded -> {
+                        progressBar.gone()
+                        navigateToHome()
+                    }
                 }
             }
         }

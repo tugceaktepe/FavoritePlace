@@ -3,26 +3,28 @@ package com.aktepetugce.favoriteplace.login.ui.login
 import android.os.Bundle
 import android.view.View
 import androidx.core.net.toUri
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
+import com.aktepetugce.favoriteplace.common.extension.gone
 import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.common.extension.onClick
+import com.aktepetugce.favoriteplace.common.extension.showSnackbar
+import com.aktepetugce.favoriteplace.common.extension.visible
 import com.aktepetugce.favoriteplace.login.R
 import com.aktepetugce.favoriteplace.login.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginFragment : com.aktepetugce.favoriteplace.common.base.BaseFragment<FragmentLoginBinding>(
+class LoginFragment : com.aktepetugce.favoriteplace.common.ui.BaseFragment<FragmentLoginBinding>(
     FragmentLoginBinding::inflate
 ) {
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.checkUser()
         initListeners()
         subscribeObservers()
     }
@@ -31,14 +33,12 @@ class LoginFragment : com.aktepetugce.favoriteplace.common.base.BaseFragment<Fra
         with(binding) {
             buttonSignIn.onClick {
                 // add validations
-                if (editTextEmail.text.isNullOrEmpty() || editTextPassword.text.isNullOrEmpty()) {
-                    showErrorMessage(getString(R.string.email_or_password_empty_error))
+                val email = editTextEmail.text.toString()
+                val password = editTextPassword.text.toString()
+                if (viewModel.isUserNamePasswordValid(email, password)) {
+                    viewModel.signIn(email, password)
                 } else {
-                    viewModel.signIn(
-                        binding.editTextEmail.text.toString(),
-                        binding.editTextPassword.text.toString()
-                    )
-                    hideKeyboard()
+                    requireView().showSnackbar(getString(R.string.email_or_password_empty_error))
                 }
                 hideKeyboard()
             }
@@ -49,17 +49,22 @@ class LoginFragment : com.aktepetugce.favoriteplace.common.base.BaseFragment<Fra
     }
 
     private fun subscribeObservers() {
-        viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
-            binding.progressBar.isVisible = uiState.isLoading
-            uiState.errorMessage?.let {
-                showErrorMessage(it)
-                viewModel.userMessageShown()
-            }
-            if (uiState.isUserAuthenticated) {
-                navigateToHome()
-            }
-            if (uiState.isLoginSuccess) {
-                navigateToHome()
+        with(binding) {
+            viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
+                when (uiState) {
+                    is LoginUiState.Loading -> progressBar.visible()
+                    is LoginUiState.Error -> {
+                        progressBar.gone()
+                        requireView().showSnackbar(uiState.message)
+                    }
+
+                    is LoginUiState.UserSignedIn -> {
+                        progressBar.gone()
+                        navigateToHome()
+                    }
+
+                    else -> {}
+                }
             }
         }
     }

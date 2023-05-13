@@ -3,7 +3,7 @@ package com.aktepetugce.favoriteplace.login.ui.splash
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
-import com.aktepetugce.favoriteplace.common.base.BaseFragment
+import com.aktepetugce.favoriteplace.common.ui.BaseFragment
 import com.aktepetugce.favoriteplace.login.R
 import com.aktepetugce.favoriteplace.login.databinding.FragmentSplashBinding
 import kotlinx.coroutines.CoroutineScope

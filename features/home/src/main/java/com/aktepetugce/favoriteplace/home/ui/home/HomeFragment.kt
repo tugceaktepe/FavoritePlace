@@ -8,15 +8,18 @@ import android.view.View
 import androidx.core.net.toUri
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.aktepetugce.favoriteplace.common.base.BaseFragment
+import com.aktepetugce.favoriteplace.common.domain.model.Place
+import com.aktepetugce.favoriteplace.common.extension.gone
 import com.aktepetugce.favoriteplace.common.extension.launchAndCollectIn
+import com.aktepetugce.favoriteplace.common.extension.showSnackbar
+import com.aktepetugce.favoriteplace.common.extension.visible
+import com.aktepetugce.favoriteplace.common.ui.BaseFragment
 import com.aktepetugce.favoriteplace.home.R
 import com.aktepetugce.favoriteplace.home.databinding.FragmentHomeBinding
 import com.aktepetugce.favoriteplace.home.ui.home.adapter.PlaceRecyclerAdapter
@@ -34,7 +37,7 @@ class HomeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.fetchPlaces()
+
         subscribeObservers()
         prepareRecyclerView()
         val menuHost: MenuHost = requireActivity()
@@ -51,26 +54,44 @@ class HomeFragment :
                     )
                     )
         )
-        placeRecyclerAdapter.setOnItemClickListener { position ->
-            viewModel.uiState.value.placeList?.let {
-                val action = HomeFragmentDirections.actionFragmentHomeToFragmentDetail(it[position])
-                findNavController().navigate(action)
-            }
+        placeRecyclerAdapter.setOnItemClickListener { placeItem ->
+            navigatePlaceToDetail(placeItem)
         }
     }
 
+    private fun navigatePlaceToDetail(placeItem: Place) {
+        val action = HomeFragmentDirections.actionFragmentHomeToFragmentDetail(placeItem)
+        findNavController().navigate(action)
+    }
+
     private fun subscribeObservers() {
-        viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
-            binding.progressBar.isVisible = uiState.isLoading
-            uiState.errorMessage?.let {
-                // TODO: Convert it one-shot event
-                showErrorMessage(it)
-                viewModel.userMessageShown()
-            } ?: run {
-                if (uiState.placesLoaded) {
-                    placeRecyclerAdapter.submitList(uiState.placeList)
-                } else if (uiState.signOutSuccess) {
-                    navigateToLogin()
+        with(binding) {
+            viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
+                when (uiState) {
+                    is HomeUiState.InitialState -> viewModel.fetchPlaces()
+                    is HomeUiState.Loading -> progressBar.visible()
+                    is HomeUiState.Error -> {
+                        if (uiState.isNotShown) {
+                            progressBar.gone()
+                            requireView().showSnackbar(uiState.message)
+                            viewModel.errorMessageShown()
+                        }
+                    }
+
+                    is HomeUiState.PlaceListLoaded -> {
+                        progressBar.gone()
+                        if (uiState.isEmpty()) {
+                            binding.textViewEmptyList.visible()
+                        } else {
+                            binding.textViewEmptyList.gone()
+                            placeRecyclerAdapter.submitList(uiState.placeList)
+                        }
+                    }
+
+                    is HomeUiState.UserSignedOut -> {
+                        progressBar.gone()
+                        navigateToLogin()
+                    }
                 }
             }
         }
@@ -101,5 +122,10 @@ class HomeFragment :
 
             else -> false
         }
+    }
+
+    override fun onDestroyView() {
+        binding.recyclerViewLocations.adapter = null
+        super.onDestroyView()
     }
 }

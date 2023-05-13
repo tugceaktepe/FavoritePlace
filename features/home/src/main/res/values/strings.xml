@@ -3,4 +3,5 @@
     <string name="log_out">Log out</string>
     <string name="app_title">FavoritePlace</string>
     <string name="location_info_title">Location Info</string>
+    <string name="empty_location_list">You can add your favorite location by clicking Add Location button! 👇</string>
 </resources>

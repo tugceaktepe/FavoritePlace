@@ -13,9 +13,9 @@ import java.util.UUID
 import javax.inject.Inject
 import com.aktepetugce.favoriteplace.common.data.model.Place as PlaceDTO
 
-class SavePlaceImage @Inject constructor(
+class SavePlace @Inject constructor(
     private val repository: PlaceRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) {
     operator fun invoke(imageUri: Uri, place: Place): Flow<Result<Unit>> {
         val imageId = place.id.ifEmpty { UUID.randomUUID().toString() }
@@ -33,12 +33,13 @@ class SavePlaceImage @Inject constructor(
             if (imageUri.toString() == "null") {
                 emit(repository.savePlaceDetail(authRepository.getCurrentUserEmail(), placeDTO))
             } else {
-                val imageSaveResult =
-                    repository.saveImage(StorageUtil.formatImagePath(imageId), imageUri)
-                if (imageSaveResult) {
-                    placeDTO = placeDTO.copy(imageUrl = repository.downloadImageUrl(imageId))
+                val imagePath = StorageUtil.formatImagePath(imageId)
+                val uploadTaskResult = repository.saveImage(imagePath, imageUri)
+                if (uploadTaskResult) {
+                    val imageUrl = repository.downloadImageUrl(imagePath)
+                    placeDTO = placeDTO.copy(imageUrl = imageUrl)
+                    emit(repository.savePlaceDetail(authRepository.getCurrentUserEmail(), placeDTO))
                 }
-                emit(repository.savePlaceDetail(authRepository.getCurrentUserEmail(), placeDTO))
             }
         }.toResult()
     }

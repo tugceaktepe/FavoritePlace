@@ -7,7 +7,8 @@
     <string name="name">name</string>
     <string name="type">type</string>
     <string name="atmosphere">atmosphere</string>
-    <string name="map_marker_title">New Place</string>
+    <string name="marker_title">New Place</string>
+    <string name="current_location_marker_title">You are here!👋</string>
     <string name="save_location_info">Click On Save</string>
     <string name="next">Next</string>
 </resources>

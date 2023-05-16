@@ -1,25 +1,27 @@
 package com.aktepetugce.favoriteplace.location.ui.map
 
 import android.Manifest
-import android.content.Context
-import android.content.SharedPreferences
+import android.app.AlertDialog
 import android.content.pm.PackageManager
-import android.location.LocationListener
-import android.location.LocationManager
+import android.graphics.BitmapFactory
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.get
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -33,13 +35,22 @@ import com.aktepetugce.favoriteplace.common.extension.visible
 import com.aktepetugce.favoriteplace.common.ui.BaseFragment
 import com.aktepetugce.favoriteplace.location.R
 import com.aktepetugce.favoriteplace.location.databinding.FragmentMapsBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MapsFragment :
@@ -49,25 +60,24 @@ class MapsFragment :
     MenuProvider {
 
     private val args: MapsFragmentArgs by navArgs()
-    private lateinit var viewModel: MapsViewModel
+    private val viewModel: MapsViewModel by viewModels()
 
-    private lateinit var locationManager: LocationManager
-    private lateinit var mGoogleMap: GoogleMap
+    private var _map: GoogleMap? = null
+    private val map get() = _map!!
+
+    private var _fusedLocationClient: FusedLocationProviderClient? = null
+    private val fusedLocationClient get() = _fusedLocationClient!!
+
+    private var previousLocationMarker: Marker? = null
+
+    private var _menuHost: MenuHost? = null
+    private val menuHost get() = _menuHost!!
 
     private var latitude = 0.0
     private var longitude = 0.0
     private lateinit var name: String
     private lateinit var uri: Uri
-
-    private val locationListener = LocationListener { location ->
-        val sharedPref: SharedPreferences? = activity?.getPreferences(Context.MODE_PRIVATE)
-        val firstTimeCheck = sharedPref?.getBoolean("firstTimeCheck", false)
-        if (firstTimeCheck != null) {
-            val newLocation = LatLng(location.latitude, location.longitude)
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, ZOOM_OPTION))
-            sharedPref.edit().putBoolean("firstTimeCheck", true).apply()
-        }
-    }
+    private var saveIconEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,12 +89,18 @@ class MapsFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MapsViewModel::class.java)
+
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        _fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        setSaveButton()
         subscribeObservers()
+    }
+
+    private fun setSaveButton() {
+        _menuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun subscribeObservers() {
@@ -106,53 +122,127 @@ class MapsFragment :
                 }
             }
         }
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        mGoogleMap = googleMap
+        _map = googleMap
         googleMap.setOnMapLongClickListener(this)
-        locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        googleMap.uiSettings.isZoomControlsEnabled = true
+        setUpMap()
+    }
 
-        if (ContextCompat.checkSelfPermission(
+    private fun setUpMap() {
+        when {
+            ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                0L,
-                0f,
-                locationListener
-            )
-            initializeLocation()
-        } else {
+            ) != PackageManager.PERMISSION_GRANTED -> {
+                getDeviceLocation()
+            }
+
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Konum izni gerekli")
+                    .setMessage("Konumunuzu kullanarak daha iyi bir deneyim sağlayabiliriz.")
+                    .setPositiveButton("Tamam") { _, _ ->
+                        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    }
+                    .setNegativeButton("İptal") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+    }
+
+    private fun getDeviceLocation() {
+        try {
+            map.isMyLocationEnabled = true
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                location?.let {
+                    setCurrentLocation(location)
+                } ?: run {
+                    requestLocationUpdate()
+                }
+            }.addOnFailureListener { exception ->
+                Log.d(TAG, exception.message ?: exception.toString())
+            }
+        } catch (e: SecurityException) {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            initializeLocation()
-        }
+    private fun setCurrentLocation(location: Location) {
+        val currentLatLng = LatLng(location.latitude, location.longitude)
+        placeMarkerOnMap(currentLatLng)
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_OPTION))
     }
 
-    private fun initializeLocation() {
-        mGoogleMap.clear()
-        val lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        if (lastKnownLocation != null) {
-            val lastUserLocation =
-                LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastUserLocation, ZOOM_OPTION))
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                getDeviceLocation()
+            } else {
+                Toast.makeText(requireContext(), "Konum izni reddedildi.", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
+
+    private fun requestLocationUpdate() {
+        val locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            LOCATION_INTERVAL
+        ).build()
+
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                for (location in locationResult.locations) {
+                    location?.let {
+                        setCurrentLocation(location)
+                        fusedLocationClient.removeLocationUpdates(this)
+                    }
+                }
+            }
+        }
+        try {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                null
+            )
+        } catch (e: SecurityException) {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
     }
 
-    override fun onMapLongClick(latLng: LatLng) {
-        longitude = latLng.longitude
-        latitude = latLng.latitude
-        mGoogleMap.addMarker(MarkerOptions().title(getString(R.string.map_marker_title)).position(latLng))
-        Toast.makeText(requireContext(), getString(R.string.save_location_info), Toast.LENGTH_LONG).show()
+    private fun placeMarkerOnMap(location: LatLng) {
+        val markerOptions = MarkerOptions().position(location)
+        markerOptions.icon(
+            BitmapDescriptorFactory.fromBitmap(
+                BitmapFactory.decodeResource(resources, R.mipmap.ic_user_location)
+            )
+        )
+        markerOptions.title(getString(R.string.current_location_marker_title))
+        map.addMarker(markerOptions)
+    }
+
+    override fun onMapLongClick(place: LatLng) {
+        previousLocationMarker?.remove()
+        previousLocationMarker = null
+        longitude = place.longitude
+        latitude = place.latitude
+        previousLocationMarker =
+            map.addMarker(MarkerOptions().title(getString(R.string.marker_title)).position(place))
+        if (!saveIconEnabled) {
+            menuHost.invalidateMenu()
+        }
     }
 
     private fun navigateToHome() {
@@ -167,14 +257,10 @@ class MapsFragment :
         )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        // Fix memory leaks
-        locationManager.removeUpdates(locationListener)
-    }
-
     companion object {
+        const val TAG = "MapsFragment"
         const val ZOOM_OPTION = 15f
+        const val LOCATION_INTERVAL = 10000L
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -201,5 +287,26 @@ class MapsFragment :
 
             else -> false
         }
+    }
+
+    override fun onPrepareMenu(menu: Menu) {
+        if (previousLocationMarker == null) {
+            menu[0].isEnabled = false
+            menu[0].icon =
+                AppCompatResources.getDrawable(requireContext(), R.drawable.ic_done_icon_passive)
+        } else {
+            menu[0].isEnabled = true
+            menu[0].icon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_done_icon)
+            saveIconEnabled = true
+        }
+        super.onPrepareMenu(menu)
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _map = null
+        _fusedLocationClient = null
+        previousLocationMarker = null
     }
 }

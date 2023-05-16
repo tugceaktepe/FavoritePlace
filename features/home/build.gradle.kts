@@ -11,6 +11,6 @@ android {
 
 dependencies {
     implementation(libs.glide.android)
-    implementation(libs.swipe.refresh.layout)
     kapt(libs.glide.compiler)
+    implementation(libs.swipe.refresh.layout)
 }

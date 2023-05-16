@@ -40,7 +40,7 @@ class AddLocationFragment :
             }
 
             buttonNext.onClick {
-                //TODO: add validations and other inputs
+                // TODO: add validations and other inputs
                 val locationName = editTextName.text.toString()
                 if (locationName.isNullOrEmpty()) {
                     requireView().showSnackbar(getString(R.string.name_or_type_empty_error))
@@ -74,7 +74,8 @@ class AddLocationFragment :
                     } else {
                         imageViewLocation.setImageDrawable(
                             AppCompatResources.getDrawable(
-                                requireContext(), R.drawable.ic_image_search
+                                requireContext(),
+                                R.drawable.ic_image_search
                             )
                         )
                     }
@@ -83,7 +84,7 @@ class AddLocationFragment :
         }
     }
 
-    //TODO: write an extension or move this method to util functions
+    // TODO: write an extension or move this method to util functions
     private val activityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {

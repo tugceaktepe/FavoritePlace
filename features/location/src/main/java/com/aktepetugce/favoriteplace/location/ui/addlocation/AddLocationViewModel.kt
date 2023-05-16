@@ -22,5 +22,4 @@ class AddLocationViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getSelectedImageUri() = uiState.value.selectedPhotoUri.toString()
-
 }

@@ -51,7 +51,6 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MapsFragment :
     BaseFragment<FragmentMapsBinding>(FragmentMapsBinding::inflate),
@@ -122,7 +121,6 @@ class MapsFragment :
                 }
             }
         }
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -219,7 +217,6 @@ class MapsFragment :
         } catch (e: SecurityException) {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-
     }
 
     private fun placeMarkerOnMap(location: LatLng) {
@@ -301,7 +298,6 @@ class MapsFragment :
         }
         super.onPrepareMenu(menu)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

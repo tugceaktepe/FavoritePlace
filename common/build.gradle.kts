@@ -27,6 +27,7 @@ dependencies {
     kapt(libs.glide.compiler)
 
     api(libs.play.services.maps)
+    api(libs.play.services.location)
 
     api(platform(libs.firebase.bom))
     api(libs.firebase.analytics)

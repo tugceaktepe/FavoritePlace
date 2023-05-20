@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/location_navigation"
+    app:startDestination="@id/fragmentAddLocation">
+
+    <fragment
+        android:id="@+id/fragmentAddLocation"
+        android:name="com.aktepetugce.favoriteplace.location.ui.addlocation.AddLocationFragment"
+        tools:layout="@layout/fragment_add_location" >
+        <action
+            android:id="@+id/action_fragmentAddLocation_to_fragmentMaps"
+            app:destination="@id/fragmentMaps" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentMaps"
+        android:name="com.aktepetugce.favoriteplace.location.ui.map.MapsFragment"
+        tools:layout="@layout/fragment_maps">
+        <argument
+            android:name="homeDestinationId"
+            app:argType="integer"/>
+        <argument
+            android:name="args"
+            app:argType="com.aktepetugce.favoriteplace.location.domain.model.MapsArgs" />
+    </fragment>
+</navigation>

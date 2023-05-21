@@ -20,25 +20,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
                 defaultConfig.targetSdk = 33
-                buildFeatures.viewBinding = true
-                defaultConfig.applicationId = "com.aktepetugce.favoriteplace"
-                defaultConfig {
-                    testInstrumentationRunner = "com.aktepetugce.favoriteplace.testing.CustomTestRunner"
-                }
-                testOptions {
-                    unitTests {
-                        isIncludeAndroidResources = true
-                    }
-                }
-                buildTypes {
-                    getByName("debug") {
-                        isMinifyEnabled = false
-                    }
-                    getByName("release") {
-                        isMinifyEnabled = true
-                        proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-                    }
-                }
 
                 val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
                 configurations.configureEach {
@@ -51,8 +32,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     add("implementation", project(":ui-components"))
                     add("androidTestImplementation", project(":testing"))
                     add("testImplementation", project(":testing"))
-                    add("testImplementation", kotlin("test"))
-                    add("testImplementation", libs.findLibrary("junit4").get())
                 }
             }
         }

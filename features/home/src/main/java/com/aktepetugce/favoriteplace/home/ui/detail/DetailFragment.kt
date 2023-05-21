@@ -3,6 +3,7 @@ package com.aktepetugce.favoriteplace.home.ui.detail
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.navArgs
+import com.aktepetugce.favoriteplace.core.di.GlideApp
 import com.aktepetugce.favoriteplace.home.R
 import com.aktepetugce.favoriteplace.home.databinding.FragmentDetailBinding
 import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
@@ -40,10 +41,9 @@ class DetailFragment :
         placeFromArgs?.let { place ->
             with(binding) {
                 textViewName.text = place.name
-                // typeTextView.text = place.type
-                /*GlideApp.with(requireContext())
+                GlideApp.with(requireContext())
                     .load(place.imageUrl)
-                    .into(imageViewPlace)*/
+                    .into(imageViewPlace)
             }
             mGoogleMap.clear()
             if (place.latitude != 0.0 && place.longitude != 0.0) {

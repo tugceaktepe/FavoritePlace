@@ -15,6 +15,30 @@ android {
         applicationId = "com.aktepetugce.favoriteplace"
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner =
+            "com.aktepetugce.favoriteplace.testing.CustomTestRunner"
+    }
+
+    buildTypes {
+        getByName("debug") {
+            isMinifyEnabled = false
+        }
+        getByName("release") {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    buildFeatures {
+        viewBinding = true
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 }
 

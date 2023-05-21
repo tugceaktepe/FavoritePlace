@@ -3,7 +3,6 @@ plugins {
     id("favoriteplace.android.library.jacoco")
     id("favoriteplace.detekt")
     alias(libs.plugins.safe.args)
-    kotlin("kapt")
 }
 android {
     namespace  = "com.aktepetugce.favoriteplace.location"

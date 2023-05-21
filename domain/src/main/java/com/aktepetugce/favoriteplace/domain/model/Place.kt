@@ -2,7 +2,6 @@ package com.aktepetugce.favoriteplace.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import kotlinx.serialization.SerialName
 
 @Parcelize
 data class Place(
@@ -13,6 +12,5 @@ data class Place(
     val imageUrl: String,
     val latitude: Double,
     val longitude: Double,
-    @SerialName("instance_id")
     val instanceId: Long
 ) : Parcelable

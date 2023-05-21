@@ -3,7 +3,6 @@ plugins {
     id("favoriteplace.android.library.jacoco")
     id("favoriteplace.android.hilt")
     id("favoriteplace.detekt")
-    kotlin("kapt")
 }
 android {
     namespace  = "com.aktepetugce.favoriteplace.core"

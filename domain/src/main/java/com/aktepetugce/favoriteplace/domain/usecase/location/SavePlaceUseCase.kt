@@ -7,11 +7,11 @@ import com.aktepetugce.favoriteplace.data.repository.PlaceRepository
 import com.aktepetugce.favoriteplace.domain.model.Place
 import com.aktepetugce.favoriteplace.domain.model.Result
 import com.aktepetugce.favoriteplace.domain.model.toResult
-import com.aktepetugce.favoriteplace.data.model.Place as PlaceDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.UUID
 import javax.inject.Inject
+import com.aktepetugce.favoriteplace.data.model.Place as PlaceDTO
 
 class SavePlaceUseCase @Inject constructor(
     private val repository: PlaceRepository,

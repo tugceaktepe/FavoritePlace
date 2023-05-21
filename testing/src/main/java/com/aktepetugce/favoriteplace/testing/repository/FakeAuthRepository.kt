@@ -1,10 +1,12 @@
 package com.aktepetugce.favoriteplace.testing.repository
 
 import com.aktepetugce.favoriteplace.data.repository.AuthRepository
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
-class FakeAuthRepository @Inject constructor(): AuthRepository {
-    override fun isUserAuthenticatedInFirebase(): Boolean {
+class FakeAuthRepository @Inject constructor() : AuthRepository {
+    override suspend fun isUserAuthenticatedInFirebase(): Boolean {
+        delay(API_CALL_TIME)
         return true
     }
 
@@ -26,5 +28,6 @@ class FakeAuthRepository @Inject constructor(): AuthRepository {
     }
     companion object {
         const val TEST_EMAIL = "test@mail.com"
+        const val API_CALL_TIME = 1000L
     }
 }

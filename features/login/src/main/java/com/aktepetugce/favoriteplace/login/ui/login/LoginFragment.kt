@@ -12,9 +12,9 @@ import com.aktepetugce.favoriteplace.core.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.core.extension.onClick
 import com.aktepetugce.favoriteplace.core.extension.showSnackbar
 import com.aktepetugce.favoriteplace.core.extension.visible
-import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
 import com.aktepetugce.favoriteplace.login.R
 import com.aktepetugce.favoriteplace.login.databinding.FragmentLoginBinding
+import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

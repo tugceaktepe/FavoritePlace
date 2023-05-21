@@ -11,8 +11,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : AuthRepository {
-    override fun isUserAuthenticatedInFirebase(): Boolean {
-        return auth.currentUser != null
+    override suspend fun isUserAuthenticatedInFirebase(): Boolean = withContext(dispatcher) {
+        auth.currentUser != null
     }
 
     override suspend fun signUp(userEmail: String, password: String): Unit =

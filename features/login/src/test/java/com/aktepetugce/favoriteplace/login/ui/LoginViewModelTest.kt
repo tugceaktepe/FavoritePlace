@@ -9,6 +9,7 @@ import com.aktepetugce.favoriteplace.testing.util.CoroutineTestRule
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -76,6 +77,8 @@ class LoginViewModelTest {
             launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
         viewModel.checkUser()
+
+        advanceUntilIdle()
 
         assertEquals(
             LoginUiState.UserSignedIn,

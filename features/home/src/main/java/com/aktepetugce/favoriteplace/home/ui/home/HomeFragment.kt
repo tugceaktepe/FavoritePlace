@@ -14,15 +14,15 @@ import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.aktepetugce.favoriteplace.domain.model.Place
 import com.aktepetugce.favoriteplace.core.extension.gone
 import com.aktepetugce.favoriteplace.core.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.core.extension.showSnackbar
 import com.aktepetugce.favoriteplace.core.extension.visible
-import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
+import com.aktepetugce.favoriteplace.domain.model.Place
 import com.aktepetugce.favoriteplace.home.R
 import com.aktepetugce.favoriteplace.home.databinding.FragmentHomeBinding
 import com.aktepetugce.favoriteplace.home.ui.home.adapter.PlaceRecyclerAdapter
+import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,11 +49,11 @@ class HomeFragment :
             recyclerViewLocations.adapter = placeRecyclerAdapter
             recyclerViewLocations.addItemDecoration(
                 (
-                        DividerItemDecoration(
-                            requireContext(),
-                            DividerItemDecoration.VERTICAL
-                        )
-                        )
+                    DividerItemDecoration(
+                        requireContext(),
+                        DividerItemDecoration.VERTICAL
+                    )
+                    )
             )
             swipeRefreshLayout.setOnRefreshListener {
                 viewModel.fetchPlaces(isLoading = false)

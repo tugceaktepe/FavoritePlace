@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.common.domain.mapper
+package com.aktepetugce.favoriteplace.domain.mapper
 
 interface Mapper<F, T> {
     suspend fun mapFrom(from: F): T {

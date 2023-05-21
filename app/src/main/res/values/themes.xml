@@ -7,5 +7,5 @@
         <item name="postSplashScreenTheme">@style/Theme.FavoritePlace</item>
     </style>-->
 
-    <style name="Theme.FavoritePlace" parent="FavoritePlaceBaseTheme" />
+    <style name="Theme.FavoritePlace" parent="FavoritePlaceTheme" />
 </resources>

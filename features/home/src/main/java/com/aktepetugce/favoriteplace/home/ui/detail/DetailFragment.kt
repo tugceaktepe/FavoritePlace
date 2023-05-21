@@ -3,9 +3,10 @@ package com.aktepetugce.favoriteplace.home.ui.detail
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.navArgs
-import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
+import com.aktepetugce.favoriteplace.core.di.GlideApp
 import com.aktepetugce.favoriteplace.home.R
 import com.aktepetugce.favoriteplace.home.databinding.FragmentDetailBinding
+import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -15,7 +16,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailFragment : BaseFragment<FragmentDetailBinding>(
+class DetailFragment :
+    BaseFragment<FragmentDetailBinding>(
         FragmentDetailBinding::inflate
     ),
     OnMapReadyCallback {
@@ -39,10 +41,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(
         placeFromArgs?.let { place ->
             with(binding) {
                 textViewName.text = place.name
-                // typeTextView.text = place.type
-                /*GlideApp.with(requireContext())
+                GlideApp.with(requireContext())
                     .load(place.imageUrl)
-                    .into(imageViewPlace)*/
+                    .into(imageViewPlace)
             }
             mGoogleMap.clear()
             if (place.latitude != 0.0 && place.longitude != 0.0) {

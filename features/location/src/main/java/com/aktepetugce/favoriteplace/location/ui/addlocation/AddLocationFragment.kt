@@ -12,11 +12,11 @@ import androidx.navigation.fragment.findNavController
 import com.aktepetugce.favoriteplace.core.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.core.extension.onClick
 import com.aktepetugce.favoriteplace.core.extension.showSnackbar
-import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
 import com.aktepetugce.favoriteplace.core.util.BitmapResolver
 import com.aktepetugce.favoriteplace.domain.model.args.MapsArgs
 import com.aktepetugce.favoriteplace.location.R
 import com.aktepetugce.favoriteplace.location.databinding.FragmentAddLocationBinding
+import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

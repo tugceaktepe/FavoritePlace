@@ -2,7 +2,7 @@ plugins {
     id("favoriteplace.android.library")
     id("favoriteplace.android.library.jacoco")
     id("favoriteplace.detekt")
-    id("org.jetbrains.kotlin.plugin.parcelize")
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {

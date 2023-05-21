@@ -4,7 +4,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.google.samples.apps.favoriteplace.buildlogic"
+group = "com.aktepetugce.favoriteplace.buildlogic"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -22,7 +22,6 @@ dependencies {
     implementation(libs.kotlin.gradlePlugin)
     implementation(libs.firebase.crashlytics.gradle)
     implementation(libs.firebase.performance.gradle)
-    implementation(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {
@@ -46,10 +45,6 @@ gradlePlugin {
         register("androidLibraryJacoco") {
             id = "favoriteplace.android.library.jacoco"
             implementationClass = "AndroidLibraryJacocoConventionPlugin"
-        }
-        register("androidTest") {
-            id = "favoriteplace.android.test"
-            implementationClass = "AndroidTestConventionPlugin"
         }
         register("androidHilt") {
             id = "favoriteplace.android.hilt"

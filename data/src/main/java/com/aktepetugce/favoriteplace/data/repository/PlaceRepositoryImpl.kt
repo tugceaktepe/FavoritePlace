@@ -5,7 +5,6 @@ import com.aktepetugce.favoriteplace.core.annotation.IoDispatcher
 import com.aktepetugce.favoriteplace.data.model.Place
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext

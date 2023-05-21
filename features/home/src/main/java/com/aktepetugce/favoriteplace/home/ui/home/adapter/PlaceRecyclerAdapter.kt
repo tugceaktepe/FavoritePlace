@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aktepetugce.favoriteplace.core.di.GlideApp
 import com.aktepetugce.favoriteplace.core.extension.onClick
 import com.aktepetugce.favoriteplace.domain.model.Place
 import com.aktepetugce.favoriteplace.home.databinding.ItemPlaceRowBinding
@@ -21,9 +22,9 @@ class PlaceRecyclerAdapter : ListAdapter<Place, PlaceRecyclerAdapter.PlaceViewHo
                     onItemClickListener(place)
                 }
                 textViewName.text = place.name
-                /*GlideApp.with(binding.root.context)
+                GlideApp.with(binding.root.context)
                     .load(place.imageUrl)
-                    .into(imageViewThumbnail)*/
+                    .into(imageViewThumbnail)
             }
         }
     }

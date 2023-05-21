@@ -2,6 +2,7 @@ package com.aktepetugce.favoriteplace.login.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aktepetugce.favoriteplace.domain.model.Result
 import com.aktepetugce.favoriteplace.domain.usecase.authentication.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.aktepetugce.favoriteplace.domain.model.Result
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(

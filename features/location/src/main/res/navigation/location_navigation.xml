@@ -23,6 +23,6 @@
             app:argType="integer"/>
         <argument
             android:name="args"
-            app:argType="com.aktepetugce.favoriteplace.location.domain.model.MapsArgs" />
+            app:argType="com.aktepetugce.favoriteplace.domain.model.args.MapsArgs" />
     </fragment>
 </navigation>

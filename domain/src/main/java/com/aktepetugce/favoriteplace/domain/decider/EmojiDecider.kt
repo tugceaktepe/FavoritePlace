@@ -1,7 +1,6 @@
 package com.aktepetugce.favoriteplace.domain.decider
 
 import com.aktepetugce.favoriteplace.domain.model.Feeling
-
 import javax.inject.Inject
 
 class EmojiDecider @Inject constructor() {

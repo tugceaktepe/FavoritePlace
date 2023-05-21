@@ -16,7 +16,7 @@ import javax.inject.Inject
 class MapsViewModel @Inject constructor(
     private val savePlaceUseCase: SavePlaceUseCase,
 
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MapsUiState> = MutableStateFlow(MapsUiState.InitialState)
     val uiState = _uiState.asStateFlow()

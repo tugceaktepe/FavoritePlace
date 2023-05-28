@@ -2,8 +2,10 @@ package com.aktepetugce.favoriteplace.core.extension
 
 import android.os.SystemClock
 import android.view.View
+import android.widget.ProgressBar
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.aktepetugce.favoriteplace.core.util.TestIdlingResource
 import com.google.android.material.snackbar.Snackbar
 
 fun View.onClick(debounceDuration: Long = 300L, action: (View) -> Unit) {
@@ -36,6 +38,16 @@ fun View.gone() {
 
 fun View.visible() {
     this.isVisible = true
+}
+
+fun ProgressBar.show() {
+    TestIdlingResource.increment()
+    this.isVisible = true
+}
+
+fun ProgressBar.hide() {
+    TestIdlingResource.decrement()
+    this.isVisible = false
 }
 
 fun View.showSnackbar(message: String) {

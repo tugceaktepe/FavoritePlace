@@ -20,9 +20,9 @@ class RegisterViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun signUp(userEmail: String, password: String) = viewModelScope.launch {
-        signUpUseCase.invoke(userEmail, password).collect { response ->
+        signUpUseCase(userEmail, password).collect { response ->
             when (response) {
-                is Result.Success<*> -> {
+                is Result.Success<Unit> -> {
                     _uiState.update { RegisterUiState.UserRegistered }
                 }
 

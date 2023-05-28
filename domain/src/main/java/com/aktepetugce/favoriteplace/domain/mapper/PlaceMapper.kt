@@ -1,6 +1,6 @@
 package com.aktepetugce.favoriteplace.domain.mapper
-import com.aktepetugce.favoriteplace.core.annotation.DefaultDispatcher
 import com.aktepetugce.favoriteplace.core.extension.orZero
+import com.aktepetugce.favoriteplace.data.annotation.DefaultDispatcher
 import com.aktepetugce.favoriteplace.domain.decider.EmojiDecider
 import com.aktepetugce.favoriteplace.domain.model.Place
 import kotlinx.coroutines.CoroutineDispatcher

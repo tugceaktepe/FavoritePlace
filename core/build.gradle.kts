@@ -13,7 +13,6 @@ dependencies{
 
     api(libs.bundles.navigation)
 
-    api(libs.kotlinx.serialization.json)
     api(libs.kotlinx.coroutines.android)
 
     api(libs.play.services.maps)
@@ -27,4 +26,6 @@ dependencies{
 
     implementation(libs.glide.android)
     kapt(libs.glide.compiler)
+
+    implementation(libs.androidx.test.espresso.resource.idling)
 }

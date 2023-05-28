@@ -1,6 +1,6 @@
 package com.aktepetugce.favoriteplace.data.repository
 
-import com.aktepetugce.favoriteplace.core.annotation.IoDispatcher
+import com.aktepetugce.favoriteplace.data.annotation.IoDispatcher
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await

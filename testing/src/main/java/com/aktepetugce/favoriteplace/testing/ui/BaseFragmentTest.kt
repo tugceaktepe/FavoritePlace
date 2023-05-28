@@ -1,51 +1,43 @@
 package com.aktepetugce.favoriteplace.testing.ui
 
 import android.os.Bundle
-import androidx.annotation.NavigationRes
-import androidx.annotation.StyleRes
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import androidx.navigation.testing.TestNavHostController
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import androidx.navigation.NavController
+import androidx.test.espresso.IdlingRegistry
+import com.aktepetugce.favoriteplace.core.util.TestIdlingResource
 import com.aktepetugce.favoriteplace.testing.util.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import org.mockito.Mockito.mock
+import org.mockito.MockitoAnnotations
 
-abstract class BaseFragmentTest {
+open class BaseFragmentTest {
     @get:Rule
     internal val hiltRule by lazy { HiltAndroidRule(this) }
 
+    // val testNavHostController = TestNavHostController(getApplicationContext())
+    val navController: NavController = mock(NavController::class.java)
+
     @Before
     internal fun setup() {
+        MockitoAnnotations.openMocks(this)
+        IdlingRegistry.getInstance().register(TestIdlingResource.countingIdlingResource)
         hiltRule.inject()
-        setupTest()
     }
 
-    abstract fun setupTest()
-
     protected inline fun <reified F : Fragment> launch(
-        fragmentArgs: Bundle? = null,
-        @NavigationRes graphResId: Int = -1,
-        destinationId: Int,
-        @StyleRes themeResId: Int = -1,
+        fragmentArgs: Bundle? = null
     ) {
         launchFragmentInHiltContainer<F>(
             fragmentArgs = fragmentArgs,
-            themeResId = themeResId,
-        ) {
-            val navigation = TestNavHostController(getApplicationContext())
-            navigation.setGraph(graphResId)
-            navigation.setCurrentDestination(destinationId)
-            Navigation.setViewNavController(requireView(), navigation)
-        }
+            navController = navController
+        )
     }
 
     @After
     internal fun tearDown() {
-        clearTest()
+        IdlingRegistry.getInstance().unregister(TestIdlingResource.countingIdlingResource)
     }
-
-    open fun clearTest() { }
 }

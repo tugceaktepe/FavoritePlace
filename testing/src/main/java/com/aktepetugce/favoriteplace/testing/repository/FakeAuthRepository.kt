@@ -1,22 +1,29 @@
 package com.aktepetugce.favoriteplace.testing.repository
 
 import com.aktepetugce.favoriteplace.data.repository.AuthRepository
+import com.aktepetugce.favoriteplace.testing.util.constant.CommonConstants.API_CALL_TIME
+import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.SIGN_IN_ERROR
+import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.SIGN_UP_ERROR
+import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_EMAIL
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class FakeAuthRepository @Inject constructor() : AuthRepository {
     override suspend fun isUserAuthenticatedInFirebase(): Boolean {
-        delay(API_CALL_TIME)
-        return true
+        return isAuthenticated
     }
 
     override suspend fun signUp(userEmail: String, password: String) {
-        //
+        delay(API_CALL_TIME)
+        if (!userEmail.contains("@")) {
+            throw IllegalArgumentException(SIGN_UP_ERROR)
+        }
     }
 
     override suspend fun signIn(userEmail: String, password: String) {
+        delay(API_CALL_TIME)
         if (!userEmail.contains("@")) {
-            throw NullPointerException("Sign Error")
+            throw IllegalArgumentException(SIGN_IN_ERROR)
         }
     }
 
@@ -24,10 +31,13 @@ class FakeAuthRepository @Inject constructor() : AuthRepository {
     }
 
     override fun getCurrentUserEmail(): String {
-        return TEST_EMAIL
+        return if (!isAuthenticated) {
+            ""
+        } else {
+            TEST_EMAIL
+        }
     }
     companion object {
-        const val TEST_EMAIL = "test@mail.com"
-        const val API_CALL_TIME = 1000L
+        var isAuthenticated = false
     }
 }

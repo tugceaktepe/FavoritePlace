@@ -1,4 +1,4 @@
-package com.aktepetugce.favoriteplace.core.annotation
+package com.aktepetugce.favoriteplace.data.annotation
 
 import javax.inject.Qualifier
 

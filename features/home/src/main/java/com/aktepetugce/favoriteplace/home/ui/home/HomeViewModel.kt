@@ -25,10 +25,10 @@ class HomeViewModel @Inject constructor(
     fun fetchPlaces(isLoading: Boolean = true) = viewModelScope.launch {
         fetchPlaceUseCase(isLoading).collect { response ->
             when (response) {
-                is Result.Success<*> -> {
+                is Result.Success<List<Place>> -> {
                     _uiState.update {
                         HomeUiState.PlaceListLoaded(
-                            placeList = response.data as List<Place>
+                            placeList = response.data
                         )
                     }
                 }
@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
     fun signOut() = viewModelScope.launch {
         signOutUseCase().collect { response ->
             when (response) {
-                is Result.Success<*> -> {
+                is Result.Success<Unit> -> {
                     _uiState.update { HomeUiState.UserSignedOut }
                 }
 

@@ -1,11 +1,12 @@
-package com.aktepetugce.favoriteplace.login.ui
+package com.aktepetugce.favoriteplace.login.ui.login
 
 import com.aktepetugce.favoriteplace.domain.usecase.authentication.CheckUserAuthenticatedUseCase
 import com.aktepetugce.favoriteplace.domain.usecase.authentication.SignInUseCase
-import com.aktepetugce.favoriteplace.login.ui.login.LoginUiState
-import com.aktepetugce.favoriteplace.login.ui.login.LoginViewModel
 import com.aktepetugce.favoriteplace.testing.repository.FakeAuthRepository
 import com.aktepetugce.favoriteplace.testing.util.CoroutineTestRule
+import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.INVALID_TEST_EMAIL
+import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_EMAIL
+import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_PASSWORD
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -26,34 +27,27 @@ class LoginViewModelTest {
     private val signInUseCase = SignInUseCase(authRepository)
     private val checkUserAuthenticatedUseCase = CheckUserAuthenticatedUseCase(authRepository)
 
-    private lateinit var viewModel: LoginViewModel
+    private lateinit var sut: LoginViewModel
 
     @Before
     fun setup() {
-        viewModel = LoginViewModel(
+        sut = LoginViewModel(
             signInUseCase = signInUseCase,
             checkUserAuthenticatedUseCase = checkUserAuthenticatedUseCase
         )
     }
 
     @Test
-    fun stateIsInitial() = runTest {
-        assertEquals(
-            LoginUiState.InitalState,
-            viewModel.uiState.value,
-        )
-    }
-
-    @Test
     fun stateIsUserSignedInWhenSignInCompleted() = runTest {
         val collectJob =
-            launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+            launch(UnconfinedTestDispatcher()) { sut.uiState.collect() }
 
-        viewModel.signIn(TEST_EMAIL, TEST_PASSWORD)
+        sut.signIn(TEST_EMAIL, TEST_PASSWORD)
+        advanceUntilIdle()
 
         assertEquals(
             LoginUiState.UserSignedIn,
-            viewModel.uiState.value,
+            sut.uiState.value,
         )
 
         collectJob.cancel()
@@ -62,27 +56,27 @@ class LoginViewModelTest {
     @Test
     fun stateIsErrorWhenSignInFailure() = runTest {
         val collectJob =
-            launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+            launch(UnconfinedTestDispatcher()) { sut.uiState.collect() }
 
-        viewModel.signIn(INVALID_TEST_EMAIL, TEST_PASSWORD)
+        sut.signIn(INVALID_TEST_EMAIL, TEST_PASSWORD)
+        advanceUntilIdle()
 
-        assertIs<LoginUiState.Error>(viewModel.uiState.value)
+        assertIs<LoginUiState.Error>(sut.uiState.value)
 
         collectJob.cancel()
     }
 
     @Test
-    fun stateIsUserSignedInWhenUserIsAlreadyAuthenticated() = runTest {
+    fun stateIsUserSignedInWhenUserIsNotSignedIn() = runTest {
         val collectJob =
-            launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+            launch(UnconfinedTestDispatcher()) { sut.uiState.collect() }
 
-        viewModel.checkUser()
-
+        sut.checkUser()
         advanceUntilIdle()
 
         assertEquals(
-            LoginUiState.UserSignedIn,
-            viewModel.uiState.value,
+            LoginUiState.UserNotSignedIn,
+            sut.uiState.value,
         )
 
         collectJob.cancel()
@@ -90,12 +84,6 @@ class LoginViewModelTest {
 
     @Test
     fun whenUserAndPasswordIsValidThenReturnTrue() {
-        assertTrue(viewModel.isUserNamePasswordValid(TEST_EMAIL, TEST_PASSWORD))
-    }
-
-    companion object {
-        const val TEST_EMAIL = "test@mail.com"
-        const val INVALID_TEST_EMAIL = "testmail.com"
-        const val TEST_PASSWORD = "password"
+        assertTrue(sut.isUserNamePasswordValid(TEST_EMAIL, TEST_PASSWORD))
     }
 }

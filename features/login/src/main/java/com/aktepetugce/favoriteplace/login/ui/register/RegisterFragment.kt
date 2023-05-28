@@ -1,17 +1,16 @@
 package com.aktepetugce.favoriteplace.login.ui.register
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
-import com.aktepetugce.favoriteplace.core.extension.gone
+import com.aktepetugce.favoriteplace.core.extension.hide
 import com.aktepetugce.favoriteplace.core.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.core.extension.onClick
+import com.aktepetugce.favoriteplace.core.extension.show
 import com.aktepetugce.favoriteplace.core.extension.showSnackbar
-import com.aktepetugce.favoriteplace.core.extension.visible
 import com.aktepetugce.favoriteplace.login.R
 import com.aktepetugce.favoriteplace.login.databinding.FragmentRegisterBinding
 import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
@@ -47,14 +46,14 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
         with(binding) {
             viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
                 when (uiState) {
-                    is RegisterUiState.Loading -> progressBar.visible()
+                    is RegisterUiState.Loading -> progressBar.show()
                     is RegisterUiState.Error -> {
-                        progressBar.gone()
+                        progressBar.hide()
                         requireView().showSnackbar(uiState.message)
                     }
 
                     is RegisterUiState.UserRegistered -> {
-                        progressBar.gone()
+                        progressBar.hide()
                         navigateToHome()
                     }
 
@@ -64,16 +63,10 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
         }
     }
     private fun navigateToHome() {
-        val deepLinkUri = NavDeepLinkRequest.Builder
-            .fromUri("android-app:/com.aktepetugce.favoriteplace/home".toUri())
-            .build()
+        val deepLinkUri = Uri.parse("android-app:/com.aktepetugce.favoriteplace/home")
         findNavController().navigate(
             deepLinkUri,
             navOptions { // Use the Kotlin DSL for building NavOptions
-                anim {
-                    enter = android.R.animator.fade_in
-                    exit = android.R.animator.fade_out
-                }
                 popUpTo(R.id.fragmentRegister) { inclusive = true }
             }
         )

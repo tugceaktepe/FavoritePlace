@@ -1,8 +1,8 @@
 package com.aktepetugce.favoriteplace.testing.di
 
-import com.aktepetugce.favoriteplace.core.annotation.DefaultDispatcher
-import com.aktepetugce.favoriteplace.core.annotation.IoDispatcher
-import com.aktepetugce.favoriteplace.core.di.DispatchersModule
+import com.aktepetugce.favoriteplace.data.annotation.DefaultDispatcher
+import com.aktepetugce.favoriteplace.data.annotation.IoDispatcher
+import com.aktepetugce.favoriteplace.data.di.DispatchersModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent

@@ -7,10 +7,8 @@ import com.aktepetugce.favoriteplace.domain.model.Place
 import com.aktepetugce.favoriteplace.domain.model.Result
 import com.aktepetugce.favoriteplace.domain.model.mapResult
 import com.aktepetugce.favoriteplace.domain.model.toResult
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class FetchPlacesUseCase @Inject constructor(
@@ -23,5 +21,5 @@ class FetchPlacesUseCase @Inject constructor(
         emit(placeRepository.fetchPlaces(userEmail))
     }.toResult(isLoading = isLoading).mapResult {
         placeMapper.mapFrom(it)
-    }.flowOn(Dispatchers.IO)
+    }
 }

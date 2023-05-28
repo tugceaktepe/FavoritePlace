@@ -12,6 +12,7 @@ android {
 dependencies {
     api(project(":data"))
     implementation(project(":core"))
+    implementation(project(":ui-components"))
 
     api(libs.androidx.test.core)
     api(libs.androidx.test.runner)
@@ -19,6 +20,8 @@ dependencies {
     api(libs.hilt.android.testing)
     api(libs.androidx.test.espresso.core)
     api(libs.testing.androidx.junit)
+    api(libs.mockito.android)
+    api(libs.androidx.test.espresso.resource.idling)
 
     debugApi(libs.androidx.fragment.testing)
     api(libs.androidx.navigation.testing)

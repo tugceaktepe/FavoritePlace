@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.util.Preconditions
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import com.aktepetugce.favoriteplace.testing.HiltTestActivity
@@ -15,7 +17,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @ExperimentalCoroutinesApi
 inline fun <reified T : Fragment> launchFragmentInHiltContainer(
     fragmentArgs: Bundle? = null,
-    themeResId: Int,
+    navController: NavController,
+    themeResId: Int = androidx.fragment.testing.R.style.FragmentScenarioEmptyFragmentActivityTheme,
     crossinline action: Fragment.() -> Unit = {}
 ) {
     val mainActivityIntent = Intent.makeMainActivity(
@@ -30,6 +33,11 @@ inline fun <reified T : Fragment> launchFragmentInHiltContainer(
             Preconditions.checkNotNull(T::class.java.classLoader),
             T::class.java.name
         )
+        fragment.viewLifecycleOwnerLiveData.observeForever { viewLifecycleOwner ->
+            if (viewLifecycleOwner != null) {
+                Navigation.setViewNavController(fragment.requireView(), navController)
+            }
+        }
         fragment.arguments = fragmentArgs
         activity.supportFragmentManager.beginTransaction()
             .add(android.R.id.content, fragment, "")

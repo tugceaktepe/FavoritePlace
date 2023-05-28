@@ -24,7 +24,7 @@ class MapsViewModel @Inject constructor(
     fun savePlace(place: Place, uri: Uri) = viewModelScope.launch {
         savePlaceUseCase(uri, place).collect { response ->
             when (response) {
-                is Result.Success<*> -> {
+                is Result.Success<Unit> -> {
                     _uiState.value = MapsUiState.LocationIsAdded
                 }
 

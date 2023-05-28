@@ -10,8 +10,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
-
+    implementation(libs.kotlinx.serialization.json)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.storage)

@@ -19,21 +19,34 @@ class LoginViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState.InitalState)
+    private val _uiState: MutableStateFlow<LoginUiState?> = MutableStateFlow(null)
     val uiState = _uiState.asStateFlow()
 
     fun checkUser() = viewModelScope.launch {
-        checkUserAuthenticatedUseCase().collect { isUserAuthenticated ->
-            if (isUserAuthenticated) {
-                _uiState.update { LoginUiState.UserSignedIn }
+        checkUserAuthenticatedUseCase().collect { response ->
+            when (response) {
+                is Result.Success<Boolean> -> {
+                    if (response.data) {
+                        _uiState.update { LoginUiState.UserSignedIn }
+                    } else {
+                        _uiState.update { LoginUiState.UserNotSignedIn }
+                    }
+                }
+                is Result.Error -> {
+                    _uiState.update { LoginUiState.Error(message = response.message) }
+                }
+
+                else -> {
+                    _uiState.update { LoginUiState.Loading }
+                }
             }
         }
     }
 
     fun signIn(userEmail: String, password: String) = viewModelScope.launch {
-        signInUseCase.invoke(userEmail, password).collect { response ->
+        signInUseCase(userEmail, password).collect { response ->
             when (response) {
-                is Result.Success<*> -> {
+                is Result.Success<Unit> -> {
                     _uiState.update { LoginUiState.UserSignedIn }
                 }
 

@@ -1,17 +1,16 @@
 package com.aktepetugce.favoriteplace.login.ui.login
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
-import com.aktepetugce.favoriteplace.core.extension.gone
+import com.aktepetugce.favoriteplace.core.extension.hide
 import com.aktepetugce.favoriteplace.core.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.core.extension.onClick
+import com.aktepetugce.favoriteplace.core.extension.show
 import com.aktepetugce.favoriteplace.core.extension.showSnackbar
-import com.aktepetugce.favoriteplace.core.extension.visible
 import com.aktepetugce.favoriteplace.login.R
 import com.aktepetugce.favoriteplace.login.databinding.FragmentLoginBinding
 import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
@@ -53,27 +52,29 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         with(binding) {
             viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
                 when (uiState) {
-                    is LoginUiState.InitalState -> {}
-                    is LoginUiState.Loading -> progressBar.visible()
+                    is LoginUiState.UserNotSignedIn -> {
+                        progressBar.hide()
+                    }
+                    is LoginUiState.Loading -> {
+                        progressBar.show()
+                    }
                     is LoginUiState.Error -> {
-                        progressBar.gone()
+                        progressBar.hide()
                         requireView().showSnackbar(uiState.message)
                     }
                     is LoginUiState.UserSignedIn -> {
-                        progressBar.gone()
+                        progressBar.hide()
                         navigateToHome()
                     }
+                    else -> {}
                 }
             }
         }
     }
 
     private fun navigateToHome() {
-        val deepLinkUri = NavDeepLinkRequest.Builder
-            .fromUri("android-app:/com.aktepetugce.favoriteplace/home".toUri())
-            .build()
         findNavController().navigate(
-            deepLinkUri,
+            Uri.parse("android-app:/com.aktepetugce.favoriteplace/home"),
             navOptions {
                 popUpTo(R.id.fragmentLogin) { inclusive = true }
             }

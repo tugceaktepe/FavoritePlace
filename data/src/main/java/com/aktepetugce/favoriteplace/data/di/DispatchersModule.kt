@@ -1,7 +1,7 @@
-package com.aktepetugce.favoriteplace.core.di
+package com.aktepetugce.favoriteplace.data.di
 
-import com.aktepetugce.favoriteplace.core.annotation.DefaultDispatcher
-import com.aktepetugce.favoriteplace.core.annotation.IoDispatcher
+import com.aktepetugce.favoriteplace.data.annotation.DefaultDispatcher
+import com.aktepetugce.favoriteplace.data.annotation.IoDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

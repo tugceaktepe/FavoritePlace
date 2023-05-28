@@ -20,7 +20,7 @@
             android:id="@+id/imageViewPlace"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            app:srcCompat="@drawable/ic_launcher_background" />
+            app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/textViewName"

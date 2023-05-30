@@ -11,7 +11,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aktepetugce.favoriteplace.login.R
-import com.aktepetugce.favoriteplace.login.ui.login.LoginFragment
 import com.aktepetugce.favoriteplace.testing.repository.FakeAuthRepository
 import com.aktepetugce.favoriteplace.testing.ui.BaseFragmentTest
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.HOME_URI

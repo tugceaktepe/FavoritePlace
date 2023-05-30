@@ -22,6 +22,9 @@ dependencies {
     api(libs.testing.androidx.junit)
     api(libs.mockito.android)
     api(libs.androidx.test.espresso.resource.idling)
+    api(libs.androidx.test.espresso.contrib) {
+        exclude("com.google.protobuf")
+    }
 
     debugApi(libs.androidx.fragment.testing)
     api(libs.androidx.navigation.testing)

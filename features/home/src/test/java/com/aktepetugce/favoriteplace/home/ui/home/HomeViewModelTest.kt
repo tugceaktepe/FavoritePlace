@@ -8,6 +8,7 @@ import com.aktepetugce.favoriteplace.testing.data.places
 import com.aktepetugce.favoriteplace.testing.repository.FakeAuthRepository
 import com.aktepetugce.favoriteplace.testing.repository.FakePlaceRepository
 import com.aktepetugce.favoriteplace.testing.util.CoroutineTestRule
+import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.SIGN_OUT_ERROR
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -17,6 +18,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 
 class HomeViewModelTest {
@@ -48,6 +50,8 @@ class HomeViewModelTest {
 
     @Test
     fun stateIsPlaceListLoadedWhenFetchCompleted() = runTest {
+        FakeAuthRepository.isAuthenticated = true
+
         val collectJob =
             launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
@@ -60,12 +64,13 @@ class HomeViewModelTest {
             ),
             viewModel.uiState.value
         )
+        assertFalse((viewModel.uiState.value as HomeUiState.PlaceListLoaded).isEmpty())
 
         collectJob.cancel()
     }
 
     @Test
-    fun stateIsErrorWhenSignInFailure() = runTest {
+    fun stateIsErrorWhenFetchPlacesFailure() = runTest {
         FakeAuthRepository.isAuthenticated = false
 
         val collectJob =
@@ -79,19 +84,54 @@ class HomeViewModelTest {
         collectJob.cancel()
     }
 
-    /*@Test
-    fun stateIsUserSignedInWhenUserIsNotSignedIn() = runTest {
+    @Test
+    fun stateIsUserSignedOutWhenUserSignedOut() = runTest {
+        FakeAuthRepository.isAuthenticated = true
+
         val collectJob =
             launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
 
-        viewModel.checkUser()
+        viewModel.signOut()
         advanceUntilIdle()
 
         assertEquals(
-            LoginUiState.UserNotSignedIn,
+            HomeUiState.UserSignedOut,
             viewModel.uiState.value,
         )
 
         collectJob.cancel()
-    }*/
+    }
+
+    @Test
+    fun stateIsErrorWhenSignOutFailure() = runTest {
+        FakeAuthRepository.isAuthenticated = false
+
+        val collectJob =
+            launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+
+        viewModel.signOut()
+        advanceUntilIdle()
+
+        assertEquals(
+            HomeUiState.Error(message = SIGN_OUT_ERROR, isNotShown = true),
+            viewModel.uiState.value,
+        )
+
+        collectJob.cancel()
+    }
+
+    @Test
+    fun stateIsErrorMessageShown() = runTest {
+        val collectJob =
+            launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+
+        viewModel.errorMessageShown()
+
+        assertEquals(
+            HomeUiState.Error(message = "", isNotShown = false),
+            viewModel.uiState.value,
+        )
+
+        collectJob.cancel()
+    }
 }

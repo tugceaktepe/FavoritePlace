@@ -44,6 +44,7 @@ class DetailFragment :
                 GlideApp.with(requireContext())
                     .load(place.imageUrl)
                     .into(imageViewPlace)
+                textViewDescription.text = place.description
             }
             mGoogleMap.clear()
             if (place.latitude != 0.0 && place.longitude != 0.0) {

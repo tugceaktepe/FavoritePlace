@@ -28,12 +28,15 @@ open class BaseFragmentTest {
     }
 
     protected inline fun <reified F : Fragment> launch(
-        fragmentArgs: Bundle? = null
+        fragmentArgs: Bundle? = null,
+        crossinline action: Fragment.() -> Unit = {}
     ) {
         launchFragmentInHiltContainer<F>(
             fragmentArgs = fragmentArgs,
             navController = navController
-        )
+        ) {
+            action(this)
+        }
     }
 
     @After

@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:theme="@style/Theme.FavoritePlace">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_KEY"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <activity
             android:name=".HiltTestActivity"
             android:exported="false"/>

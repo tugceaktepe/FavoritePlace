@@ -9,13 +9,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aktepetugce.favoriteplace.login.R
-import com.aktepetugce.favoriteplace.login.ui.login.LoginFragment
-import com.aktepetugce.favoriteplace.login.ui.register.RegisterFragment
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants
-import com.aktepetugce.favoriteplace.testing.repository.FakeAuthRepository
 import com.aktepetugce.favoriteplace.testing.ui.BaseFragmentTest
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.INVALID_TEST_EMAIL
-import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.SIGN_IN_ERROR
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.SIGN_UP_ERROR
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_EMAIL
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_PASSWORD

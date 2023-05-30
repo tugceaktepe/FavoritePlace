@@ -1,21 +1,22 @@
 package com.aktepetugce.favoriteplace.home.ui.home
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.net.toUri
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.aktepetugce.favoriteplace.core.extension.gone
+import com.aktepetugce.favoriteplace.core.extension.hide
 import com.aktepetugce.favoriteplace.core.extension.launchAndCollectIn
+import com.aktepetugce.favoriteplace.core.extension.show
 import com.aktepetugce.favoriteplace.core.extension.showSnackbar
 import com.aktepetugce.favoriteplace.core.extension.visible
 import com.aktepetugce.favoriteplace.domain.model.Place
@@ -75,17 +76,17 @@ class HomeFragment :
             viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
                 when (uiState) {
                     is HomeUiState.InitialState -> viewModel.fetchPlaces()
-                    is HomeUiState.Loading -> progressBar.visible()
+                    is HomeUiState.Loading -> progressBar.show()
                     is HomeUiState.Error -> {
                         if (uiState.isNotShown) {
-                            progressBar.gone()
+                            progressBar.hide()
                             requireView().showSnackbar(uiState.message)
                             viewModel.errorMessageShown()
                         }
                     }
 
                     is HomeUiState.PlaceListLoaded -> {
-                        progressBar.gone()
+                        progressBar.hide()
                         if (uiState.isEmpty()) {
                             binding.textViewEmptyList.visible()
                         } else {
@@ -95,7 +96,7 @@ class HomeFragment :
                     }
 
                     is HomeUiState.UserSignedOut -> {
-                        progressBar.gone()
+                        progressBar.hide()
                         navigateToLogin()
                     }
                 }
@@ -104,9 +105,7 @@ class HomeFragment :
     }
 
     private fun navigateToLogin() {
-        val deepLinkUri = NavDeepLinkRequest.Builder
-            .fromUri("android-app:/com.aktepetugce.favoriteplace/authentication/login".toUri())
-            .build()
+        val deepLinkUri = Uri.parse("android-app:/com.aktepetugce.favoriteplace/authentication/login")
         findNavController().navigate(
             deepLinkUri,
             navOptions {

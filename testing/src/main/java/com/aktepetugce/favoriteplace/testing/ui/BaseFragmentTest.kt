@@ -7,22 +7,23 @@ import androidx.test.espresso.IdlingRegistry
 import com.aktepetugce.favoriteplace.core.util.TestIdlingResource
 import com.aktepetugce.favoriteplace.testing.util.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.MockK
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
-import org.mockito.Mockito.mock
-import org.mockito.MockitoAnnotations
 
 open class BaseFragmentTest {
     @get:Rule
     internal val hiltRule by lazy { HiltAndroidRule(this) }
 
     // val testNavHostController = TestNavHostController(getApplicationContext())
-    val navController: NavController = mock(NavController::class.java)
+    @MockK
+    lateinit var navController: NavController
 
     @Before
     internal fun setup() {
-        MockitoAnnotations.openMocks(this)
+        MockKAnnotations.init(this)
         IdlingRegistry.getInstance().register(TestIdlingResource.countingIdlingResource)
         hiltRule.inject()
     }

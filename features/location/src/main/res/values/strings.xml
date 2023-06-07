@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="name_or_type_empty_error">Name or Type cannot be empty!</string>
+    <string name="name_empty_error">Name cannot be empty!</string>
     <string name="add_location_title">Add Location</string>
     <string name="set_location_title">Set Location</string>
     <string name="location_info_title">Location Info</string>
     <string name="name">name</string>
-    <string name="type">type</string>
-    <string name="atmosphere">atmosphere</string>
+    <string name="feeling">feeling</string>
+    <string name="description">description</string>
     <string name="marker_title">New Place</string>
     <string name="current_location_marker_title">You are here!👋</string>
     <string name="save_location_info">Click On Save</string>
     <string name="next">Next</string>
+    <string name="photo_picker_image">Photo picker button image</string>
+    <string name="map_description">Google Map</string>
 </resources>

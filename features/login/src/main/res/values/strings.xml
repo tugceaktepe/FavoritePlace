@@ -8,4 +8,7 @@
     <string name="sign_up_text">Do you need an account? <font color="#097ECC">Sign Up! 🤩</font> </string>
     <string name="sign_in_text">Already have an account?</string>
     <string name="email_or_password_empty_error">Email or password can not be empty!</string>
+    <string name="sign_up_button">Sign up button</string>
+    <string name="sign_in_button">Sign in button</string>
+    <string name="splash_screen_image">Splash screen image</string>
 </resources>

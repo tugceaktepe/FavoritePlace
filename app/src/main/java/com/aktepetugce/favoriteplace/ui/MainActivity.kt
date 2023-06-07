@@ -63,6 +63,12 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
         destination: NavDestination,
         arguments: Bundle?
     ) {
+        if (destination.id == fragmentAddLocation) {
+            controller.currentBackStackEntry?.savedStateHandle?.set(
+                "HOME_DESTINATION_ID",
+                controller.previousBackStackEntry?.destination?.id
+            )
+        }
         manageBottomNavigation(destination.id)
         manageActionBar(destination.id)
     }

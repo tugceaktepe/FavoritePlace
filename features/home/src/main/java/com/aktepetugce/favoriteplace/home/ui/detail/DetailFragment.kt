@@ -2,8 +2,8 @@ package com.aktepetugce.favoriteplace.home.ui.detail
 
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.fragment.navArgs
 import com.aktepetugce.favoriteplace.core.di.GlideApp
+import com.aktepetugce.favoriteplace.domain.model.Place
 import com.aktepetugce.favoriteplace.home.R
 import com.aktepetugce.favoriteplace.home.databinding.FragmentDetailBinding
 import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
@@ -22,7 +22,6 @@ class DetailFragment :
     ),
     OnMapReadyCallback {
 
-    private val args: DetailFragmentArgs by navArgs()
     private lateinit var mGoogleMap: GoogleMap
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,19 +36,19 @@ class DetailFragment :
     }
 
     private fun getLocationData() {
-        val placeFromArgs = args.place
-        placeFromArgs?.let { place ->
+        val place = arguments?.getParcelable("place") as Place?
+        place?.let {
             with(binding) {
-                textViewName.text = place.name
+                textViewName.text = it.name
                 GlideApp.with(requireContext())
-                    .load(place.imageUrl)
+                    .load(it.imageUrl)
                     .into(imageViewPlace)
-                textViewDescription.text = place.description
+                textViewDescription.text = it.description
             }
             mGoogleMap.clear()
-            if (place.latitude != 0.0 && place.longitude != 0.0) {
-                val placeLocation = LatLng(place.latitude, place.longitude)
-                mGoogleMap.addMarker(MarkerOptions().position(placeLocation).title(place.name))
+            if (it.latitude != 0.0 && it.longitude != 0.0) {
+                val placeLocation = LatLng(it.latitude, it.longitude)
+                mGoogleMap.addMarker(MarkerOptions().position(placeLocation).title(it.name))
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation, ZOOM_OPTION))
             }
         }

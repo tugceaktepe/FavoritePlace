@@ -11,4 +11,6 @@ android {
 dependencies {
     implementation(libs.glide.android)
     kapt(libs.glide.compiler)
+    testImplementation(libs.robolectric)
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0-alpha03")
 }

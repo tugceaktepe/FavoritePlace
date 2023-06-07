@@ -1,5 +1,6 @@
 package com.aktepetugce.favoriteplace.home.ui.detail
 
+import android.os.Bundle
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -30,7 +31,8 @@ class DetailFragmentTest : BaseFragmentTest(){
 
     @Test
     fun screenIsReady() {
-        val bundle = DetailFragmentArgs(place = harryPotterStudio).toBundle()
+        val bundle = Bundle()
+        bundle.putParcelable("place",harryPotterStudio)
         launch<DetailFragment>(fragmentArgs = bundle)
         Espresso.onView(ViewMatchers.withId(R.id.imageViewPlace))
             .check(ViewAssertions.matches(ViewMatchers.withContentDescription(R.string.favorite_location_image)))

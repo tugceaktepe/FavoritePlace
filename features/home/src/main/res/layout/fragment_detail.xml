@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="500dp"
         android:orientation="vertical"
-        android:id="@+id/linearLayout"
+        android:id="@+id/layoutDetail"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,16 +41,25 @@
             android:textSize="22sp"
             tools:text="Description" />
 
+        <TextView
+            android:id="@+id/textViewFeeling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textSize="22sp"
+            tools:text="Feeling" />
+
     </LinearLayout>
 
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/mapDetail"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        map:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        map:layout_constraintBottom_toBottomOf="@id/layoutDetail"
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toStartOf="parent"
         tools:context=".DetailActivity" />

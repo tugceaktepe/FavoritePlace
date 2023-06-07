@@ -32,28 +32,27 @@ class AddLocationFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            imageViewLocation.setOnClickListener {
-                imageViewLocation.onClick {
-                    val intent = Intent(Intent.ACTION_PICK)
-                    intent.type = "image/*"
-                    activityLauncher.launch(intent)
-                }
+            imageViewPhotoPicker.onClick {
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = "image/*"
+                activityLauncher.launch(intent)
             }
 
             buttonNext.onClick {
                 // TODO: add validations and other inputs
                 val locationName = editTextName.text.toString()
                 if (locationName.isNullOrEmpty()) {
-                    requireView().showSnackbar(getString(R.string.name_or_type_empty_error))
+                    requireView().showSnackbar(getString(R.string.name_empty_error))
                 } else {
-                    val action =
-                        AddLocationFragmentDirections.actionFragmentAddLocationToFragmentMaps(
-                            homeDestinationId = findNavController().previousBackStackEntry?.destination?.id
-                                ?: -1,
-                            args = MapsArgs(locationName, viewModel.getSelectedImageUri()),
-                        )
+                    val destinationId =
+                        findNavController().currentBackStackEntry?.savedStateHandle?.get<Int>("HOME_DESTINATION_ID")
+                            ?: -1
+
+                    val bundle = Bundle()
+                    bundle.putInt("homeDestinationId", destinationId)
+                    bundle.putParcelable("args", MapsArgs(locationName, viewModel.getSelectedImageUri()))
                     hideKeyboard()
-                    findNavController().navigate(action)
+                    findNavController().navigate(R.id.action_fragmentAddLocation_to_fragmentMaps, bundle)
                 }
             }
         }
@@ -71,9 +70,9 @@ class AddLocationFragment :
                                 uiState.selectedPhotoUri
                             )
                         }
-                        imageViewLocation.setImageBitmap(selectedImageBitMap)
+                        imageViewPhotoPicker.setImageBitmap(selectedImageBitMap)
                     } else {
-                        imageViewLocation.setImageDrawable(
+                        imageViewPhotoPicker.setImageDrawable(
                             AppCompatResources.getDrawable(
                                 requireContext(),
                                 R.drawable.ic_image_search

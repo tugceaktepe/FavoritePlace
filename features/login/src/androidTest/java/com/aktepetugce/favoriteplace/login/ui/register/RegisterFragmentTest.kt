@@ -16,9 +16,10 @@ import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.SIGN_U
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_EMAIL
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_PASSWORD
 import dagger.hilt.android.testing.HiltAndroidTest
+import io.mockk.every
+import io.mockk.verify
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -43,6 +44,13 @@ class RegisterFragmentTest : BaseFragmentTest(){
 
     @Test
     fun signUpSuccessfully()  {
+        every {
+            navController.navigate(Uri.parse(LoginConstants.HOME_URI),
+                navOptions {
+                    popUpTo(R.id.fragmentRegister) { inclusive = true }
+                })
+        }returns Unit
+
         launch<RegisterFragment>()
 
         Espresso.onView(withId(R.id.editTextEmail))
@@ -52,12 +60,12 @@ class RegisterFragmentTest : BaseFragmentTest(){
         Espresso.onView(withId(R.id.buttonSignUp))
             .perform(ViewActions.click())
 
-        Mockito.verify(navController).navigate(
-            Uri.parse(LoginConstants.HOME_URI),
+        verify {
+            navController.navigate(Uri.parse(LoginConstants.HOME_URI),
             navOptions {
                 popUpTo(R.id.fragmentRegister) { inclusive = true }
-            }
-        )
+            })
+        }
     }
 
     @Test
@@ -79,11 +87,17 @@ class RegisterFragmentTest : BaseFragmentTest(){
 
     @Test
     fun navigateSignIn()  {
+        every {
+            navController.navigate(R.id.action_fragmentRegister_to_fragmentLogin)
+        } returns Unit
+
         launch<RegisterFragment>()
 
         Espresso.onView(withId(R.id.textViewLogin))
             .perform(ViewActions.click())
 
-        Mockito.verify(navController).navigate(R.id.action_fragmentRegister_to_fragmentLogin)
+        verify {
+            navController.navigate(R.id.action_fragmentRegister_to_fragmentLogin)
+        }
     }
 }

@@ -21,9 +21,5 @@
         android:id="@+id/fragmentDetail"
         android:name="com.aktepetugce.favoriteplace.home.ui.detail.DetailFragment"
         tools:layout="@layout/fragment_detail">
-        <argument
-            android:name="place"
-            app:argType="com.aktepetugce.favoriteplace.domain.model.Place"
-            app:nullable="true" />
     </fragment>
 </navigation>

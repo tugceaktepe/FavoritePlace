@@ -1,5 +1,7 @@
 package com.aktepetugce.favoriteplace.core.util
 
+import com.aktepetugce.favoriteplace.core.BuildConfig
+
 object TestIdlingResource {
 
     private const val RESOURCE = "GLOBAL"
@@ -9,12 +11,16 @@ object TestIdlingResource {
         SimpleCountingIdlingResource(RESOURCE)
 
     fun increment() {
-        countingIdlingResource.increment()
+        if (BuildConfig.DEBUG) {
+            countingIdlingResource.increment()
+        }
     }
 
     fun decrement() {
-        if (!countingIdlingResource.isIdleNow) {
-            countingIdlingResource.decrement()
+        if (BuildConfig.DEBUG) {
+            if (!countingIdlingResource.isIdleNow) {
+                countingIdlingResource.decrement()
+            }
         }
     }
 }

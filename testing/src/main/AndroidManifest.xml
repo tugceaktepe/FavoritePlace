@@ -10,6 +10,7 @@
             android:value="@integer/google_play_services_version" />
         <activity
             android:name=".HiltTestActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false"/>
     </application>
 </manifest>

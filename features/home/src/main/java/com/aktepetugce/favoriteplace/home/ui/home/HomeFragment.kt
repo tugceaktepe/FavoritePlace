@@ -67,8 +67,9 @@ class HomeFragment :
     }
 
     private fun navigatePlaceToDetail(placeItem: Place) {
-        val action = HomeFragmentDirections.actionFragmentHomeToFragmentDetail(placeItem)
-        findNavController().navigate(action)
+        val bundle = Bundle()
+        bundle.putParcelable("place", placeItem)
+        findNavController().navigate(R.id.action_fragmentHome_to_fragmentDetail, bundle)
     }
 
     private fun subscribeObservers() {

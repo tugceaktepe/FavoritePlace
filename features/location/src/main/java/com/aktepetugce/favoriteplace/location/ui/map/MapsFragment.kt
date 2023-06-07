@@ -24,13 +24,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
 import com.aktepetugce.favoriteplace.core.extension.gone
 import com.aktepetugce.favoriteplace.core.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.core.extension.showSnackbar
 import com.aktepetugce.favoriteplace.core.extension.visible
 import com.aktepetugce.favoriteplace.domain.model.Place
+import com.aktepetugce.favoriteplace.domain.model.args.MapsArgs
 import com.aktepetugce.favoriteplace.location.R
 import com.aktepetugce.favoriteplace.location.databinding.FragmentMapsBinding
 import com.aktepetugce.favoriteplace.uicomponents.base.BaseFragment
@@ -57,7 +57,6 @@ class MapsFragment :
     GoogleMap.OnMapLongClickListener,
     MenuProvider {
 
-    private val args: MapsFragmentArgs by navArgs()
     private val viewModel: MapsViewModel by viewModels()
 
     private var _map: GoogleMap? = null
@@ -79,9 +78,10 @@ class MapsFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        args.let {
-            name = it.args.name
-            uri = Uri.parse(it.args.uri)
+        arguments?.let {
+            val args = it.getParcelable("args") as MapsArgs?
+            name = args?.name ?: ""
+            uri = Uri.parse(args?.uri ?: "")
         }
     }
 
@@ -248,7 +248,7 @@ class MapsFragment :
         findNavController().navigate(
             deepLinkUri,
             navOptions {
-                popUpTo(args.homeDestinationId) { inclusive = true }
+                popUpTo(arguments?.getInt("homeDestinationId") ?: -1) { inclusive = true }
             }
         )
     }

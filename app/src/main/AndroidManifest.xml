@@ -23,6 +23,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <tools:validation testUrl="https://tugceaktepe.github.io/favoriteplace" />
             <nav-graph android:value="@navigation/app_navigation" />

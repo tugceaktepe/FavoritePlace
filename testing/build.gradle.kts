@@ -20,7 +20,8 @@ dependencies {
     api(libs.hilt.android.testing)
     api(libs.androidx.test.espresso.core)
     api(libs.testing.androidx.junit)
-    api(libs.mockito.android)
+    api(libs.mockk.android)
+    api(libs.mockk.agent)
     api(libs.androidx.test.espresso.resource.idling)
     api(libs.androidx.test.espresso.contrib) {
         exclude("com.google.protobuf")

@@ -19,16 +19,18 @@ import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.SIGN_I
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_EMAIL
 import com.aktepetugce.favoriteplace.testing.util.constant.LoginConstants.TEST_PASSWORD
 import dagger.hilt.android.testing.HiltAndroidTest
+import io.mockk.every
+import io.mockk.verify
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.verify
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class LoginFragmentTest : BaseFragmentTest(){
+class LoginFragmentTest : BaseFragmentTest() {
 
     @Test
     fun screenIsReady() {
+        FakeAuthRepository.isAuthenticated = false
         launch<LoginFragment>()
         onView(withId(R.id.textViewWelcome))
             .check(matches(withText(R.string.welcome_text)))
@@ -45,8 +47,14 @@ class LoginFragmentTest : BaseFragmentTest(){
     }
 
     @Test
-    fun loginSuccessfully()  {
+    fun loginSuccessfully() {
         FakeAuthRepository.isAuthenticated = false
+        every {
+            navController.navigate(Uri.parse(HOME_URI),
+                navOptions {
+                    popUpTo(R.id.fragmentLogin) { inclusive = true }
+                })
+        } returns Unit
 
         launch<LoginFragment>()
 
@@ -57,31 +65,40 @@ class LoginFragmentTest : BaseFragmentTest(){
         onView(withId(R.id.buttonSignIn))
             .perform(click())
 
-        verify(navController).navigate(Uri.parse(HOME_URI),
-            navOptions {
-                popUpTo(R.id.fragmentLogin) { inclusive = true }
-            }
-        )
+        verify {
+            navController.navigate(Uri.parse(HOME_URI),
+                navOptions {
+                    popUpTo(R.id.fragmentLogin) { inclusive = true }
+                })
+        }
     }
 
     @Test
-    fun userIsAlreadyAuthenticated(){
+    fun userIsAlreadyAuthenticated() {
         FakeAuthRepository.isAuthenticated = true
+        every {
+            navController.navigate(Uri.parse(HOME_URI),
+                navOptions {
+                    popUpTo(R.id.fragmentLogin) { inclusive = true }
+                })
+        } returns Unit
 
         launch<LoginFragment>()
 
         onView(withId(R.id.textViewWelcome))
             .check(matches(withText(R.string.welcome_text)))
 
-        verify(navController).navigate(Uri.parse(HOME_URI),
-            navOptions {
-                popUpTo(R.id.fragmentLogin) { inclusive = true }
-            }
-        )
+        verify {
+            navController.navigate(Uri.parse(HOME_URI),
+                navOptions {
+                    popUpTo(R.id.fragmentLogin) { inclusive = true }
+                }
+            )
+        }
     }
 
     @Test
-    fun loginWithError()  {
+    fun loginWithError() {
         FakeAuthRepository.isAuthenticated = false
 
         launch<LoginFragment>()
@@ -93,17 +110,22 @@ class LoginFragmentTest : BaseFragmentTest(){
         onView(withId(R.id.buttonSignIn))
             .perform(click())
 
-        onView(withText(SIGN_IN_ERROR)).check(matches( isDisplayed()))
+        onView(withText(SIGN_IN_ERROR)).check(matches(isDisplayed()))
 
     }
 
     @Test
-    fun navigateSignUp()  {
+    fun navigateSignUp() {
+        FakeAuthRepository.isAuthenticated = false
+        every { navController.navigate(R.id.fragmentRegister) } returns Unit
+
         launch<LoginFragment>()
 
         onView(withId(R.id.textViewSignUp))
             .perform(click())
 
-        verify(navController).navigate(R.id.fragmentRegister)
+        verify {
+            navController.navigate(R.id.fragmentRegister)
+        }
     }
 }

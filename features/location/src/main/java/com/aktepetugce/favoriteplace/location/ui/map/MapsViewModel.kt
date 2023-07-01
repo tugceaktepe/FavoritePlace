@@ -1,6 +1,5 @@
 package com.aktepetugce.favoriteplace.location.ui.map
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aktepetugce.favoriteplace.domain.model.Place
@@ -21,8 +20,8 @@ class MapsViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<MapsUiState> = MutableStateFlow(MapsUiState.InitialState)
     val uiState = _uiState.asStateFlow()
 
-    fun savePlace(place: Place, uri: Uri) = viewModelScope.launch {
-        savePlaceUseCase(uri, place).collect { response ->
+    fun savePlace(place: Place, data: ByteArray) = viewModelScope.launch {
+        savePlaceUseCase(data, place).collect { response ->
             when (response) {
                 is Result.Success<Unit> -> {
                     _uiState.value = MapsUiState.LocationIsAdded

@@ -18,31 +18,31 @@ sealed class Result<out T> {
 }
 
 fun <T> Flow<T>.toResult(isLoading: Boolean = true): Flow<Result<T>> {
-    return map<T, com.aktepetugce.favoriteplace.domain.model.Result<T>> {
-        com.aktepetugce.favoriteplace.domain.model.Result.Success(it)
+    return map<T, Result<T>> {
+        Result.Success(it)
     }
         .onStart {
             if (isLoading) {
-                emit(com.aktepetugce.favoriteplace.domain.model.Result.Loading)
+                emit(Result.Loading)
             }
         }
         .catch { exception ->
-            emit(com.aktepetugce.favoriteplace.domain.model.Result.Error(exception.message ?: exception.toString()))
+            emit(Result.Error(exception.message ?: exception.toString()))
         }
 }
 
 fun <T, R> Flow<Result<T>>.mapResult(mapper: suspend (T) -> R): Flow<Result<R>> {
     return map {
         when (it) {
-            is com.aktepetugce.favoriteplace.domain.model.Result.Success -> {
+            is Result.Success -> {
                 val data = it.data
-                com.aktepetugce.favoriteplace.domain.model.Result.Success(mapper(data))
+                Result.Success(mapper(data))
             }
 
-            is com.aktepetugce.favoriteplace.domain.model.Result.Loading -> it
-            is com.aktepetugce.favoriteplace.domain.model.Result.Error -> it
+            is Result.Loading -> it
+            is Result.Error -> it
         }
     }.catch {
-        emit(com.aktepetugce.favoriteplace.domain.model.Result.Error(it.message ?: it.toString()))
+        emit(Result.Error(it.message ?: it.toString()))
     }
 }

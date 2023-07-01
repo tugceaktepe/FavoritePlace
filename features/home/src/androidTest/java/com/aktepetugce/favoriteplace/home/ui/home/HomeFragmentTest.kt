@@ -12,10 +12,9 @@ import com.aktepetugce.favoriteplace.home.R
 import com.aktepetugce.favoriteplace.testing.repository.FakeAuthRepository
 import com.aktepetugce.favoriteplace.testing.ui.BaseFragmentTest
 import dagger.hilt.android.testing.HiltAndroidTest
-import io.mockk.every
-import io.mockk.verify
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.test.assertEquals
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -32,12 +31,14 @@ class HomeFragmentTest : BaseFragmentTest() {
     @Test
     fun navigatePlaceDetail() {
         FakeAuthRepository.isAuthenticated = true
-        every { navController.navigate(any<Int>(),any()) } returns Unit
-        launch<HomeFragment>()
+        launch<HomeFragment>(
+            graphId = R.navigation.home_navigation
+        )
         onView(withId(R.id.recyclerViewLocations))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
-        verify {
-            navController.navigate(any<Int>(), any())
-        }
+        val backStack = testNavHostController.backStack
+        val currentDestination = backStack.last()
+
+        assertEquals(currentDestination.destination.id, R.id.fragmentDetail)
     }
 }

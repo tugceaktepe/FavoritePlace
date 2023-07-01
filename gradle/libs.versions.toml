@@ -27,13 +27,11 @@ kotlinxCoroutines = "1.6.4"
 kotlinxSerializationJson = "1.5.0"
 leakCanary = "2.10"
 material = "1.6.1"
-mockK = "1.13.5"
 okhttp = "4.10.0"
 playServicesMap = "18.1.0"
 playServicesLocation = "21.0.1"
 retrofit = "2.9.0"
 secrets = "2.0.1"
-robolectric = "4.10.3"
 swipeRefreshLayout = "1.2.0-alpha01"
 
 [libraries]
@@ -77,13 +75,10 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 leak-canary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakCanary" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
-mockk-android = { module = "io.mockk:mockk-android" , version.ref = "mockK"}
-mockk-agent = { module = "io.mockk:mockk-agent" , version.ref = "mockK"}
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMap" }
 play-services-location = { module = "com.google.android.gms:play-services-location ", version.ref = "playServicesLocation" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-robolectric = { group= "org.robolectric", name="robolectric" , version.ref = "robolectric" }
 swipe-refresh-layout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefreshLayout" }
 
 # Dependencies of the included build-logic

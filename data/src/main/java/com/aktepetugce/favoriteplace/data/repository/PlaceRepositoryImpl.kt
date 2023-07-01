@@ -1,6 +1,5 @@
 package com.aktepetugce.favoriteplace.data.repository
 
-import android.net.Uri
 import com.aktepetugce.favoriteplace.data.annotation.IoDispatcher
 import com.aktepetugce.favoriteplace.data.model.Place
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,10 +14,10 @@ class PlaceRepositoryImpl @Inject constructor(
     private val storage: FirebaseStorage,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : PlaceRepository {
-    override suspend fun saveImage(imagePath: String, imageUri: Uri): Boolean =
+    override suspend fun saveImage(imagePath: String, imageBytes: ByteArray): Boolean =
         withContext(dispatcher) {
             val storageReferenceChild = this@PlaceRepositoryImpl.storage.reference.child(imagePath)
-            val taskResult = storageReferenceChild.putFile(imageUri).await()
+            val taskResult = storageReferenceChild.putBytes(imageBytes).await()
             taskResult.task.isSuccessful
         }
 

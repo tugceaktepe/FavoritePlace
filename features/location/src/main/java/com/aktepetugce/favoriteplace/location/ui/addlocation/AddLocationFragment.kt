@@ -2,6 +2,7 @@ package com.aktepetugce.favoriteplace.location.ui.addlocation
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,11 +64,11 @@ class AddLocationFragment :
         with(binding) {
             viewModel.uiState.launchAndCollectIn(viewLifecycleOwner) { uiState ->
                 lifecycleScope.launch {
-                    if (uiState.selectedPhotoUri.toString() != "null") {
+                    if (uiState.selectedPhotoUri.isNotEmpty()) {
                         val selectedImageBitMap = withContext(Dispatchers.IO) {
                             BitmapResolver.getBitmap(
                                 requireContext().contentResolver,
-                                uiState.selectedPhotoUri
+                                Uri.parse(uiState.selectedPhotoUri)
                             )
                         }
                         imageViewPhotoPicker.setImageBitmap(selectedImageBitMap)
@@ -89,7 +90,7 @@ class AddLocationFragment :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val selectedImageUri = result.data?.data!!
-                viewModel.saveSelectedPhoto(selectedImageUri)
+                viewModel.saveSelectedPhoto(selectedImageUri.toString())
             }
         }
 }

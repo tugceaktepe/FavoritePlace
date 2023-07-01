@@ -1,6 +1,5 @@
 package com.aktepetugce.favoriteplace.location.ui.map
 
-import android.net.Uri
 import com.aktepetugce.favoriteplace.domain.model.Place
 import com.aktepetugce.favoriteplace.domain.usecase.location.SavePlaceUseCase
 import com.aktepetugce.favoriteplace.location.R
@@ -15,13 +14,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-// TODO: used because of Uri. But remove Uri from viewModel later
-@RunWith(RobolectricTestRunner::class)
 class MapsViewModelTest {
     @get:Rule
     val coroutineTestRule = CoroutineTestRule()
@@ -60,7 +55,7 @@ class MapsViewModelTest {
         val collectJob =
             launch(UnconfinedTestDispatcher()) { sut.uiState.collect() }
 
-        sut.savePlace(harryPotterStudio, Uri.parse("TEST"))
+        sut.savePlace(harryPotterStudio, byteArrayOf(1, 2, 3))
         advanceUntilIdle()
 
         assertEquals(
@@ -78,7 +73,7 @@ class MapsViewModelTest {
         val collectJob =
             launch(UnconfinedTestDispatcher()) { sut.uiState.collect() }
 
-        sut.savePlace(harryPotterStudio, Uri.parse(""))
+        sut.savePlace(harryPotterStudio, byteArrayOf(4))
         advanceUntilIdle()
 
         assertIs<MapsUiState.Error>(sut.uiState.value)
@@ -93,7 +88,7 @@ class MapsViewModelTest {
         val collectJob =
             launch(UnconfinedTestDispatcher()) { sut.uiState.collect() }
 
-        sut.savePlace(harryPotterStudio.copy(id = "123456"), Uri.parse("TEST"))
+        sut.savePlace(harryPotterStudio.copy(id = "123456"), byteArrayOf(1, 2, 3))
         advanceUntilIdle()
 
         assertIs<MapsUiState.Error>(sut.uiState.value)
@@ -107,7 +102,7 @@ class MapsViewModelTest {
         val collectJob =
             launch(UnconfinedTestDispatcher()) { sut.uiState.collect() }
 
-        sut.savePlace(harryPotterStudio, Uri.parse("TEST"))
+        sut.savePlace(harryPotterStudio, byteArrayOf(1, 2, 3))
         advanceUntilIdle()
 
         assertIs<MapsUiState.Error>(sut.uiState.value)

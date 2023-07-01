@@ -1,7 +1,5 @@
 package com.aktepetugce.favoriteplace.location.ui.addlocation
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavBackStackEntry
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
@@ -13,29 +11,14 @@ import com.aktepetugce.favoriteplace.location.R
 import com.aktepetugce.favoriteplace.testing.ui.BaseFragmentTest
 import com.aktepetugce.favoriteplace.testing.util.constant.PlaceConstants
 import dagger.hilt.android.testing.HiltAndroidTest
-import io.mockk.MockKAnnotations
-import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.verify
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.test.assertEquals
 
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class AddLocationFragmentTest : BaseFragmentTest() {
-
-    @MockK
-    lateinit var navBackStackEntry: NavBackStackEntry
-
-    @MockK
-    lateinit var savedStateHandle: SavedStateHandle
-
-    @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
-    }
 
     @Test
     fun screenIsReady() {
@@ -54,15 +37,9 @@ class AddLocationFragmentTest : BaseFragmentTest() {
 
     @Test
     fun navigateMaps() {
-        every {
-            navController.currentBackStackEntry
-        } returns navBackStackEntry
-
-        every { navBackStackEntry.savedStateHandle } returns savedStateHandle
-        every { savedStateHandle.get<Int>("HOME_DESTINATION_ID") } returns 1
-        every { navController.navigate(any<Int>(),any()) } returns Unit
-
-        launch<AddLocationFragment>()
+        launch<AddLocationFragment>(
+            graphId = R.navigation.location_navigation
+        )
 
         Espresso.onView(ViewMatchers.withId(R.id.editTextName))
             .perform(ViewActions.typeText(PlaceConstants.LOCATION_NAME))
@@ -73,9 +50,10 @@ class AddLocationFragmentTest : BaseFragmentTest() {
         Espresso.onView(ViewMatchers.withId(R.id.buttonNext))
             .perform(click())
 
-        verify {
-            navController.navigate(any<Int>(), any())
-        }
+        val backStack = testNavHostController.backStack
+        val currentDestination = backStack.last()
+
+        assertEquals(currentDestination.destination.id, R.id.fragmentMaps)
     }
 
     @Test

@@ -2,7 +2,8 @@ package com.aktepetugce.favoriteplace.location.ui.map
 
 import android.os.Bundle
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.longClick
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aktepetugce.favoriteplace.location.R
@@ -19,8 +20,10 @@ class MapsFragmentTest : BaseFragmentTest(){
     fun screenIsReady(){
         val bundle = Bundle()
         bundle.putInt("homeDestinationId", R.id.fragmentAddLocation)
-        launch<MapsFragment>(bundle)
-        onView(withContentDescription(R.string.map_description)).perform(longClick())
+        launch<MapsFragment>(
+            bundle
+        )
+        onView(withContentDescription(R.string.map_description)).check(ViewAssertions.matches(isDisplayed()))
         //TEST TOOLBAR ON MAIN ACTIVITY
     }
 }

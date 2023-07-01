@@ -3,6 +3,7 @@ package com.aktepetugce.favoriteplace.location.ui.map
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
 import android.net.Uri
@@ -22,6 +23,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.get
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -29,6 +31,7 @@ import com.aktepetugce.favoriteplace.core.extension.gone
 import com.aktepetugce.favoriteplace.core.extension.launchAndCollectIn
 import com.aktepetugce.favoriteplace.core.extension.showSnackbar
 import com.aktepetugce.favoriteplace.core.extension.visible
+import com.aktepetugce.favoriteplace.core.util.BitmapResolver
 import com.aktepetugce.favoriteplace.domain.model.Place
 import com.aktepetugce.favoriteplace.domain.model.args.MapsArgs
 import com.aktepetugce.favoriteplace.location.R
@@ -49,6 +52,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 @AndroidEntryPoint
 class MapsFragment :
@@ -257,6 +263,7 @@ class MapsFragment :
         const val TAG = "MapsFragment"
         const val ZOOM_OPTION = 15f
         const val LOCATION_INTERVAL = 10000L
+        const val QUALITY_RATE = 60
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -277,7 +284,16 @@ class MapsFragment :
                     instanceId = 0,
                     imageUrl = ""
                 )
-                viewModel.savePlace(place, uri)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val bitMap = BitmapResolver.getBitmap(
+                        requireContext().contentResolver,
+                        uri
+                    )
+                    val baos = ByteArrayOutputStream()
+                    bitMap?.compress(Bitmap.CompressFormat.JPEG, QUALITY_RATE, baos)
+                    val data = baos.toByteArray()
+                    viewModel.savePlace(place, data)
+                }
                 true
             }
 

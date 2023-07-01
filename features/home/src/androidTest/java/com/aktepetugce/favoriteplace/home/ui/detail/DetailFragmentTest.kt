@@ -1,7 +1,7 @@
 package com.aktepetugce.favoriteplace.home.ui.detail
 
 import android.os.Bundle
-import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -34,13 +34,13 @@ class DetailFragmentTest : BaseFragmentTest(){
         val bundle = Bundle()
         bundle.putParcelable("place",harryPotterStudio)
         launch<DetailFragment>(fragmentArgs = bundle)
-        Espresso.onView(ViewMatchers.withId(R.id.imageViewPlace))
+        onView(ViewMatchers.withId(R.id.imageViewPlace))
             .check(ViewAssertions.matches(ViewMatchers.withContentDescription(R.string.favorite_location_image)))
-        Espresso.onView(ViewMatchers.withId(R.id.textViewName))
+        onView(ViewMatchers.withId(R.id.textViewName))
             .check(ViewAssertions.matches(isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.textViewDescription))
+        onView(ViewMatchers.withId(R.id.textViewDescription))
             .check(ViewAssertions.matches(isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.mapDetail))
+        onView(ViewMatchers.withId(R.id.mapDetail))
             .check(ViewAssertions.matches(isDisplayed()))
     }
 

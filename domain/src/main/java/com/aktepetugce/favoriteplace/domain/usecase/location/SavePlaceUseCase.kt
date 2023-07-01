@@ -1,6 +1,5 @@
 package com.aktepetugce.favoriteplace.domain.usecase.location
 
-import android.net.Uri
 import com.aktepetugce.favoriteplace.core.util.StorageUtil
 import com.aktepetugce.favoriteplace.data.repository.AuthRepository
 import com.aktepetugce.favoriteplace.data.repository.PlaceRepository
@@ -17,7 +16,7 @@ class SavePlaceUseCase @Inject constructor(
     private val repository: PlaceRepository,
     private val authRepository: AuthRepository,
 ) {
-    operator fun invoke(imageUri: Uri, place: Place): Flow<Result<Unit>> {
+    operator fun invoke(byteArray: ByteArray, place: Place): Flow<Result<Unit>> {
         val imageId = place.id.ifEmpty { UUID.randomUUID().toString() }
         var placeDTO = PlaceDTO(
             id = imageId,
@@ -30,11 +29,11 @@ class SavePlaceUseCase @Inject constructor(
             instanceId = if (place.instanceId == 0L) System.currentTimeMillis() else place.instanceId
         )
         return flow {
-            if (imageUri.toString() == "null") {
+            if (byteArray.isEmpty()) {
                 emit(repository.savePlaceDetail(authRepository.getCurrentUserEmail(), placeDTO))
             } else {
                 val imagePath = StorageUtil.formatImagePath(imageId)
-                val uploadTaskResult = repository.saveImage(imagePath, imageUri)
+                val uploadTaskResult = repository.saveImage(imagePath, byteArray)
                 if (uploadTaskResult) {
                     val imageUrl = repository.downloadImageUrl(imagePath)
                     placeDTO = placeDTO.copy(imageUrl = imageUrl)
